@@ -13,14 +13,3 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 
-
-// import { createApp } from "./app.js";
-//
-// export const startServer = async (container) => {
-//     const app = createApp(container);
-//     const PORT = process.env.PORT || 3000;
-//
-//     app.listen(PORT, () => {
-//         console.log(`Server running on port ${PORT}`);
-//     });
-// };
