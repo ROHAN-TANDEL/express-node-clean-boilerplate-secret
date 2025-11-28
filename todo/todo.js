@@ -1,3 +1,5 @@
+
+// initial
 const express = require('express');
 const { createClient } = require('redis');
 const { v4: uuid } = require('uuid');
@@ -13,7 +15,58 @@ redis.on('connect', () => console.log('Connected to Redis'));
 redis.on('error', (err) => console.error('Redis error:', err));
 
 
-const TODOS_KEY = 'todos';
+    const TODOS_KEY = 'todos';
+
+const apis = {
+    'todos': {
+        'getAll' : {
+            "api" : '/todo/getAll',
+            "name" : "get_all_todos"
+        },
+        'getTodo' : {
+            "api" : "/todo/:id",
+            "name" : "get_todo"
+        },
+    }
+};
+
+app.get(apis.todos.getAll.api, getData);
+app.get(apis.todos.getTodo.api, getTodo);
+
+
+async function getTodo(request, response)
+{
+    const { id } = request.params;
+    let todo = await redis.hGet(TODOS_KEY, id);
+    todo = JSON.parse(todo);
+    return response.json(todo);
+}
+
+
+
+// resource
+function formatData(todos) {
+
+    return Object.values(todos).map(JSON.parse);
+}
+
+// repo
+async function getAllData()
+{
+    const todos = await redis.hGetAll(TODOS_KEY);
+
+    if (!todos) {
+        return '';
+    }
+    return todos;
+}
+
+// service
+async function getData(request, response)
+{
+    return await response.json(formatData(await getAllData()));
+}
+
 
 
 app.post('/todos', async (req, res) => {
@@ -66,5 +119,5 @@ app.delete('/todos/:id', async (req, res) => {
 });
 
 
-app.listen(3001, () => console.log("Server running on port 3001"));
+app.listen(3002, () => console.log("Server running on port 3002"));
 
