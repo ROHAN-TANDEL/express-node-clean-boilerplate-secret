@@ -51,7 +51,7 @@ const apis = {
  */
 app.get(apis.todos.getAll.api, getAllTodo);
 app.get(apis.todos.getTodo.api, getTodo);
-app.post(apis.todos.updateTodo.api, updateTodo);
+app.put(apis.todos.updateTodo.api, updateTodo);
 app.delete(apis.todos.deleteTodo.api, deleteTodo);
 
 /**
@@ -85,19 +85,16 @@ async function redisUtil(key, input=null)
 
         case apis.todos.updateTodo.name:
 
-            const todo = await redis.hGet(TODOS_KEY, input.id);
-            if (!todo) {
-                data.error = "todo not found.";
-            }
-
+            let todo = await redis.hGet(TODOS_KEY, input.id);
+            if (!todo) { data.error = "todo not found."; }
             if (todo) {
-                delete input.id;
-                data = await redis.hSet(TODOS_KEY, todo.id, input);
+                todo = JSON.parse(todo);
+                data = await redis.hSet(TODOS_KEY, todo.id, JSON.stringify(input));
+               if (!data) { data = input; }
             }
         break;
     }
-
-    return data.length === 0 ? input : data;
+    return data;
 }
 
 /**
@@ -137,10 +134,10 @@ function formatUtil(key, input=null)
  */
 async function getTodo(request, response)
 {
-    const { id } = request.params;
+    const params = request.params;
     const key = apis.todos.getTodo.name;
 
-    let todo = await redisUtil(key, id);
+    let todo = await redisUtil(key, params);
 
     todo = formatUtil(key, todo);
 
@@ -202,7 +199,7 @@ async function updateTodo(request, response)
         return response.json({"error" : "error updating data"});
     }
 
-    return response.json({"success" : todo});
+    return response.json({"success" : true , "data" : todo});
 }
 
 /**
@@ -219,8 +216,6 @@ async function deleteTodo(request, response)
 
     const key = apis.todos.deleteTodo.name;
 
-    console.log('rohan');
-    console.log(data);
     const deletedTodo = await redisUtil(key, data);
 
     if (!deletedTodo) {
