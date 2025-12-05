@@ -7,117 +7,227 @@ const { v4: uuid } = require('uuid');
 const app = express();
 app.use(express.json());
 
-
 const redis = createClient();
 redis.connect().catch(console.error);
 
 redis.on('connect', () => console.log('Connected to Redis'));
 redis.on('error', (err) => console.error('Redis error:', err));
 
+/**
+ * redist key
+ * @type {string}
+ */
+const TODOS_KEY = 'todos';
 
-    const TODOS_KEY = 'todos';
-
+/**
+ * configuration file
+ * handle configuration for todos crud API
+ *
+ * @type {{todos: {getAll: {api: string, name: string}, getTodo: {api: string, name: string}, updateTodo: {api: string, name: string}, deleteTodo: {api: string, name: string}}}}
+ */
 const apis = {
     'todos': {
         'getAll' : {
-            "api" : '/todo/getAll',
+            "api" : '/todo/all',
             "name" : "get_all_todos"
         },
         'getTodo' : {
             "api" : "/todo/:id",
             "name" : "get_todo"
         },
+        'updateTodo' : {
+            "api" : "/todo/:id",
+            "name" : "update_todo"
+        },
+        'deleteTodo' : {
+            "api" : "/todo/:id",
+            "name" : "delete_todo"
+        }
     }
 };
 
-app.get(apis.todos.getAll.api, getData);
+/**
+ * apis for todos operations
+ */
+app.get(apis.todos.getAll.api, getAllTodo);
 app.get(apis.todos.getTodo.api, getTodo);
+app.post(apis.todos.updateTodo.api, updateTodo);
+app.delete(apis.todos.deleteTodo.api, updateTodo);
 
+/**
+ * redisUtil
+ * handle redis operations CRUD
+ *
+ * @param key
+ * @param input
+ * @returns {Promise<null|{}>}
+ */
+async function redisUtil(key, input=null)
+{
+    let data = {};
 
+    switch (key) {
+
+        case apis.todos.getAll.name:
+            data = await redis.hGetAll(TODOS_KEY);
+            break;
+
+        case apis.todos.getTodo.name:
+            data = await redis.hGet(TODOS_KEY, input.id);
+        break;
+
+        case apis.todos.deleteTodo.name:
+            data = await redis.hGet(TODOS_KEY, input.id);
+            console.log(data);
+            if (!data) data.error = "todo not found.";
+            if(data) data = await redis.hDel(TODOS_KEY, data.id);
+        break;
+
+        case apis.todos.updateTodo.name:
+
+            const todo = await redis.hGet(TODOS_KEY, input.id);
+            if (!todo) {
+                data.error = "todo not found.";
+            }
+
+            if (todo) {
+                delete input.id;
+                console.log(input);
+                console.log(data);
+                data = await redis.hSet(TODOS_KEY, todo.id, input);
+            }
+        break;
+    }
+
+    return data.length === 0 ? input : data;
+}
+
+/**
+ * formatUtil
+ * format raw data input readable format example: json
+ *
+ * @param key
+ * @param input
+ * @returns {{}}
+ */
+function formatUtil(key, input=null)
+{
+    let data = {};
+
+    switch (key) {
+
+        case apis.todos.getTodo.name:
+            data = JSON.parse(input);
+        break;
+
+        case apis.todos.getAll.name:
+            data = Object.values(input).map(JSON.parse);
+        break;
+
+    }
+
+    return data;
+}
+
+/**
+ * getTodo
+ * get todos details with id, completed, title
+ *
+ * @param request
+ * @param response
+ * @returns {Promise<*>}
+ */
 async function getTodo(request, response)
 {
     const { id } = request.params;
-    let todo = await redis.hGet(TODOS_KEY, id);
-    todo = JSON.parse(todo);
+    const key = apis.todos.getTodo.name;
+
+    let todo = await redisUtil(key, id);
+
+    todo = formatUtil(key, todo);
+
     return response.json(todo);
 }
 
+/**
+ * getAllTodo
+ * get all todos list
+ *
+ * @param request
+ * @param response
+ * @returns {Promise<*>}
+ */
+async function getAllTodo(request, response)
+{
+    const key = apis.todos.getAll.name;
 
+    let todos = await redisUtil(key);
 
-// resource
-function formatData(todos) {
+    todos = formatUtil(key, todos);
 
-    return Object.values(todos).map(JSON.parse);
+    return await response.json(todos);
 }
 
-// repo
-async function getAllData()
+/**
+ * updateTodo
+ * update title and status of todos
+ *
+ * @param request
+ * @param response
+ * @returns {Promise<*>}
+ */
+async function updateTodo(request, response)
 {
-    const todos = await redis.hGetAll(TODOS_KEY);
+    const data = {};
 
-    if (!todos) {
-        return '';
+    data.id = request.params.id;
+    const completed = request.body?.completed;
+    const title = request.body?.title;
+
+    if (!title && !completed) {
+        return response.json({"error": "no data to update"});
     }
-    return todos;
+
+    if (title) {
+        data.title = title;
+    }
+
+    if (completed) {
+        data.completed = completed;
+    }
+
+    const key = apis.todos.updateTodo.name;
+
+    let todo = await redisUtil(key, data);
+
+    if (!todo) {
+        return response.json({"error" : "error updating data"});
+    }
+
+    return response.json({"success" : todo});
 }
 
-// service
-async function getData(request, response)
+/**
+ * deleteTodo
+ * delete a specific todos
+ *
+ * @param request
+ * @param response
+ * @returns {Promise<*>}
+ */
+async function deleteTodo(request, response)
 {
-    return await response.json(formatData(await getAllData()));
+    const data = req.params?.id;
+
+    const key = apis.todos.deleteTodo.name;
+    const deletedTodo = await redisUtil(key, data);
+
+    if (!deletedTodo) {
+        return response.status(404).json({ error: "Todo not found" });
+    }
+
+    return response.json({ message: "Deleted successfully" });
 }
-
-
-
-app.post('/todos', async (req, res) => {
-    const { title } = req.body;
-    if (!title) return res.status(400).json({ error: "Title required" });
-
-    const id = uuid();
-    const todo = { id, title, completed: false };
-
-    await redis.hSet(TODOS_KEY, id, JSON.stringify(todo));
-
-    res.json(todo);
-});
-
-
-app.get('/todos', async (req, res) => {
-    const todos = await redis.hGetAll(TODOS_KEY);
-
-    const formatted = Object.values(todos).map(JSON.parse);
-
-    res.json(formatted);
-});
-
-
-app.put('/todos/:id', async (req, res) => {
-    const { id } = req.params;
-    const { title, completed } = req.body;
-
-    const todoStr = await redis.hGet(TODOS_KEY, id);
-    if (!todoStr) return res.status(404).json({ error: "Todo not found" });
-
-    const todo = JSON.parse(todoStr);
-
-    if (title !== undefined) todo.title = title;
-    if (completed !== undefined) todo.completed = completed;
-
-    await redis.hSet(TODOS_KEY, id, JSON.stringify(todo));
-
-    res.json(todo);
-});
-
-
-app.delete('/todos/:id', async (req, res) => {
-    const { id } = req.params;
-
-    const removed = await redis.hDel(TODOS_KEY, id);
-    if (!removed) return res.status(404).json({ error: "Todo not found" });
-
-    res.json({ message: "Deleted successfully" });
-});
 
 
 app.listen(3002, () => console.log("Server running on port 3002"));
-
