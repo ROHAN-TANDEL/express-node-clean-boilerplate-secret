@@ -42,7 +42,11 @@ const apis = {
         'deleteTodo' : {
             "api" : "/todo/:id",
             "name" : "delete_todo"
-        }
+        },
+        'addTodo' : {
+            "api" : "/todo/add",
+            "name" : "add_todo"
+        },
     }
 };
 
@@ -51,8 +55,14 @@ const apis = {
  */
 app.get(apis.todos.getAll.api, getAllTodo);
 app.get(apis.todos.getTodo.api, getTodo);
-app.put(apis.todos.updateTodo.api, updateTodo);
+app.post(apis.todos.updateTodo.api, updateTodo);
+app.put(apis.todos.addTodo.api, addTodo);
 app.delete(apis.todos.deleteTodo.api, deleteTodo);
+
+app.delete('/todo/purge/redis', async (request, response) => {
+    await redis.del(TODOS_KEY);
+    return response.status(200).json({"success": "all todos removed"});
+});
 
 /**
  * redisUtil
@@ -76,19 +86,35 @@ async function redisUtil(key, input=null)
             data = await redis.hGet(TODOS_KEY, input.id);
         break;
 
+        case apis.todos.addTodo.name:
+            data = await redis.hSet(TODOS_KEY, input.id, JSON.stringify(input));
+
+            if (data) {
+               data = input;
+            }
+            break;
+
         case apis.todos.deleteTodo.name:
-            data = await redis.hGet(TODOS_KEY, input.id);
-            data = JSON.parse(data);
-            if (data) data = await redis.hDel(TODOS_KEY, data.id);
-            if (!data) data.error = "todo not found.";
+            let deleteTodo = await redis.hGet(TODOS_KEY, input.id);
+            if (!deleteTodo) {
+                data = { error : "todo not found."};
+            }
+            if (data) {
+                data = JSON.parse(deleteTodo);
+                if (data) {
+                    data = await redis.hDel(TODOS_KEY, data.id);
+                }
+            }
+            if (!data) data = { error : "todo not found."};
         break;
 
         case apis.todos.updateTodo.name:
 
             let todo = await redis.hGet(TODOS_KEY, input.id);
-            if (!todo) { data.error = "todo not found."; }
+            if (!todo) { data = { error : "todo not found."}; }
             if (todo) {
                 todo = JSON.parse(todo);
+                input = { ...todo, ...input };
                 data = await redis.hSet(TODOS_KEY, todo.id, JSON.stringify(input));
                if (!data) { data = input; }
             }
@@ -125,6 +151,31 @@ function formatUtil(key, input=null)
 }
 
 /**
+ * addTodo
+ * add new todos with id
+ *
+ * @param request
+ * @param response
+ * @returns {Promise<*>}
+ */
+async function addTodo(request, response)
+{
+    const { data } = request.body;
+
+    data['id'] = uuid();
+
+    const key = apis.todos.addTodo.name;
+
+    const addedTodo = await redisUtil(key, data);
+
+    if (addedTodo) {
+        return response.status(200).send({"success" : true, "data" : addedTodo});
+    }
+
+    return response.status(400).send({"error" : "could not add new todo"});
+}
+
+/**
  * getTodo
  * get todos details with id, completed, title
  *
@@ -141,7 +192,11 @@ async function getTodo(request, response)
 
     todo = formatUtil(key, todo);
 
-    return response.json(todo);
+    if (todo) {
+        return response.status(200).json(todo);
+    }
+
+    return response.status(400).json({"error" : "could not add todo"});
 }
 
 /**
@@ -160,7 +215,11 @@ async function getAllTodo(request, response)
 
     todos = formatUtil(key, todos);
 
-    return await response.json(todos);
+    if (todos) {
+        return response.status(200).json(todos);
+    }
+
+    return response.status(400).json({"error" : "could not add todo"});
 }
 
 /**
@@ -195,11 +254,11 @@ async function updateTodo(request, response)
 
     let todo = await redisUtil(key, data);
 
-    if (!todo) {
-        return response.json({"error" : "error updating data"});
+    if (!todo || todo.error) {
+        return response.status(400).json({"error" : todo?.error ?? "error updating data"});
     }
 
-    return response.json({"success" : true , "data" : todo});
+    return response.status(200).json({"success" : true , "data" : todo});
 }
 
 /**
@@ -218,11 +277,11 @@ async function deleteTodo(request, response)
 
     const deletedTodo = await redisUtil(key, data);
 
-    if (!deletedTodo) {
-        return response.status(404).json({ error: "Todo not found" });
+    if (!deletedTodo || deletedTodo.error) {
+        return response.status(400).json({ error: "Todo not found" });
     }
 
-    return response.json({ message: "Deleted successfully" });
+    return response.status(200).json({ message: "Deleted successfully" });
 }
 
 
