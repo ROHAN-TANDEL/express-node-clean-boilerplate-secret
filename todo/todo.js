@@ -23,7 +23,7 @@ const TODOS_KEY = 'todos';
  * configuration file
  * handle configuration for todos crud API
  *
- * @type {{todos: {getAll: {api: string, name: string}, getTodo: {api: string, name: string}, updateTodo: {api: string, name: string}, deleteTodo: {api: string, name: string}}}}
+ * @type
  */
 const apis = {
     'todos': {
@@ -52,7 +52,7 @@ const apis = {
 app.get(apis.todos.getAll.api, getAllTodo);
 app.get(apis.todos.getTodo.api, getTodo);
 app.post(apis.todos.updateTodo.api, updateTodo);
-app.delete(apis.todos.deleteTodo.api, updateTodo);
+app.delete(apis.todos.deleteTodo.api, deleteTodo);
 
 /**
  * redisUtil
@@ -78,9 +78,9 @@ async function redisUtil(key, input=null)
 
         case apis.todos.deleteTodo.name:
             data = await redis.hGet(TODOS_KEY, input.id);
-            console.log(data);
+            data = JSON.parse(data);
+            if (data) data = await redis.hDel(TODOS_KEY, data.id);
             if (!data) data.error = "todo not found.";
-            if(data) data = await redis.hDel(TODOS_KEY, data.id);
         break;
 
         case apis.todos.updateTodo.name:
@@ -92,8 +92,6 @@ async function redisUtil(key, input=null)
 
             if (todo) {
                 delete input.id;
-                console.log(input);
-                console.log(data);
                 data = await redis.hSet(TODOS_KEY, todo.id, input);
             }
         break;
@@ -217,9 +215,12 @@ async function updateTodo(request, response)
  */
 async function deleteTodo(request, response)
 {
-    const data = req.params?.id;
+    const data = request.params;
 
     const key = apis.todos.deleteTodo.name;
+
+    console.log('rohan');
+    console.log(data);
     const deletedTodo = await redisUtil(key, data);
 
     if (!deletedTodo) {
