@@ -1,0 +1,628 @@
+{
+	"info": {
+		"_postman_id": "241d2c4f-1c91-4cd6-ae8d-968b81052da2",
+		"name": "1 todo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2075130"
+	},
+	"item": [
+		{
+			"name": "get all todos",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3002/todo/all",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"todo",
+						"all"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success - get all todos",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"learn node js at 10:30 AM\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3002/todo/all",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"all"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "377"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"179-0YS5V1wOgEHcV+FDQfZQilOzoJg\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 19:10:53 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"95f331cb-405d-4d4b-a088-36406403c2db\",\n        \"title\": \"office work 11:00 AM\",\n        \"completed\": false\n    },\n    {\n        \"id\": \"0997d0eb-afcb-4711-b4b2-d8fca48e6aec\",\n        \"title\": \"Learn Spanish\",\n        \"completed\": true\n    },\n    {\n        \"id\": \"c90bdee8-aaea-4f8c-9759-8c0a73983f59\",\n        \"title\": \"evening walk 5:30 PM\",\n        \"completed\": false\n    },\n    {\n        \"id\": \"6443658e-1b8d-421c-b96e-6340a00d413b\",\n        \"title\": \"mini breakfast at 8:30 AM\",\n        \"completed\": true\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "get one todo",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3002/todo/0997d0eb-afcb-4711-b4b2-d8fca48e6aec",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"todo",
+						"0997d0eb-afcb-4711-b4b2-d8fca48e6aec"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success - get one todo",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3002/todo/95f331cb-405d-4d4b-a088-36406403c2db",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"95f331cb-405d-4d4b-a088-36406403c2db"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "94"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"5e-1nejCMHgmY4Kh9QA/8reBFkCcto\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 19:19:29 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"95f331cb-405d-4d4b-a088-36406403c2db\",\n    \"title\": \"office work 11:00 AM\",\n    \"completed\": false\n}"
+				},
+				{
+					"name": "error - get one todo",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3002/todo/95f331cb-405d-4d4b-a088-36406403c2dc",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"95f331cb-405d-4d4b-a088-36406403c2dc"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "4"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"4-K+iMpCQsduglOsYkdIUQZQMtaDM\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 19:19:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "null"
+				}
+			]
+		},
+		{
+			"name": "update one todo",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\" : \"worked on express js todo app 6:30 PM, its okay finish it fast\",\n    \"completed\" : true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3002/todo/6443658e-1b8d-421c-b96e-6340a00d413b",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"todo",
+						"6443658e-1b8d-421c-b96e-6340a00d413b"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "update one todo",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"worked on express js todo app 6:30 PM\",\n    \"completed\" : true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3002/todo/6443658e-1b8d-421c-b96e-6340a00d413b",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"6443658e-1b8d-421c-b96e-6340a00d413b"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "134"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"86-PzZ8qNuwmfAeRUfzq12Qm+AyE0o\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 20:24:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": \"6443658e-1b8d-421c-b96e-6340a00d413b\",\n        \"title\": \"worked on express js todo app 6:30 PM\",\n        \"completed\": true\n    }\n}"
+				},
+				{
+					"name": "error - update one todo",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"worked on express js todo app 6:30 PM, its okay finish it fast\",\n    \"completed\" : true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3002/todo/6443658e-1b8d-421c-b96e-6340a00d413b",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"6443658e-1b8d-421c-b96e-6340a00d413b"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "31"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1f-yQ08ehwrRe5HvW2fxnW+G5RzgGg\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 20:53:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"error updating data\"\n}"
+				}
+			]
+		},
+		{
+			"name": "delete one todo",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3002/todo/6443658e-1b8d-421c-b96e-6340a00d413b",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"todo",
+						"6443658e-1b8d-421c-b96e-6340a00d413b"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete one todo",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3002/todo/6443658e-1b8d-421c-b96e-6340a00d413b",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"6443658e-1b8d-421c-b96e-6340a00d413b"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "34"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"22-oOJrBJyyGFYVIpRp+CKZEFg6p8Q\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 20:26:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Deleted successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "delete all todos",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3002/todo/purge/redis",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"todo",
+						"purge",
+						"redis"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete all todos",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3002/todo/purge/redis",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"purge",
+								"redis"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "31"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1f-q1Wre/bXDuVnojvpq77Qa9HmRao\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 21:24:35 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": \"all todos removed\"\n}"
+				}
+			]
+		},
+		{
+			"name": "add one todo",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\" : {\n    \"title\" : \"dinner at 08:00 PM\",\n    \"completed\" : false,\n    \"description\" : \"daily activity, food\"\n}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3002/todo/add",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"todo",
+						"add"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add one todo",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\" : {\n    \"title\" : \"dinner at 08:00 PM\",\n    \"completed\" : false,\n    \"description\" : \"daily activity, food\"\n}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3002/todo/add",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"todo",
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "153"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"99-4kRve2ttG+35mNXSRvoISxpp0Ek\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Dec 2025 21:55:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"title\": \"dinner at 08:00 PM\",\n        \"completed\": false,\n        \"description\": \"daily activity, food\",\n        \"id\": \"037ba138-7ba9-4b6d-b6c4-b79b3664708f\"\n    }\n}"
+				}
+			]
+		}
+	]
+}
