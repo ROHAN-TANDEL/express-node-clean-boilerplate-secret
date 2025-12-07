@@ -3,7 +3,7 @@ export default function TodoDetails({ selectedTodo })
     if (!selectedTodo) {
         return (
             <div style={{ padding: "10px", width: "100%" }}>Select a todo...</div>
-        );  
+        );
     }
 
     return (
