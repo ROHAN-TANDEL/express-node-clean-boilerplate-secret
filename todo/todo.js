@@ -2,10 +2,12 @@
 // initial
 const express = require('express');
 const { createClient } = require('redis');
+const cors = require("cors");
 const { v4: uuid } = require('uuid');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const redis = createClient();
 redis.connect().catch(console.error);
