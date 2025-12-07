@@ -555,6 +555,298 @@ Make list clickable
 
 This is critical React knowledge.
 
+Great — now we move to Phase 2 (continued): Rendering Todo Items.
+This is where you learn two core React concepts:
+
+⭐ 1. How to render a list of components
+⭐ 2. How to pass data to a component using props
+
+If you understand these two deeply, React will feel like magic.
+
+Let’s go step by step.
+
+🧪 STEP 1 — Create a Dummy List of Todos
+
+Before connecting to the backend, we simulate data to understand rendering.
+
+Open TodoList.jsx and add:
+
+const dummyTodos = [
+{ id: "1", title: "Learn Express", completed: false },
+{ id: "2", title: "Learn Redis", completed: true },
+{ id: "3", title: "Build Todo App", completed: false },
+];
+
+
+These mimic the structure of real API data.
+
+🧱 STEP 2 — Import and Use TodoItem
+
+Inside your TodoList.jsx:
+
+import TodoItem from "../TodoItem/TodoItem";
+
+
+Then use .map() to render a list:
+
+<div>
+  {dummyTodos.map(todo => (
+    <TodoItem key={todo.id} todo={todo} />
+  ))}
+</div>
+
+
+⭐ The key={todo.id} is required by React for list performance.
+⭐ The todo={todo} sends the todo object to TodoItem.
+
+This is your first introduction to props.
+
+🧠 STEP 3 — Update TodoItem to Use Props
+
+Open TodoItem.jsx:
+
+Replace placeholder with:
+
+export default function TodoItem({ todo }) {
+return (
+<div style={{
+padding: "8px",
+borderBottom: "1px solid #eee",
+cursor: "pointer"
+}}>
+{todo.title}
+</div>
+);
+}
+
+
+This teaches you:
+
+How props work
+
+How to extract data from props
+
+How to display dynamic content
+
+🖥 RESULT (What you should see in UI)
+
+On the left side:
+
+Learn Express
+Learn Redis
+Build Todo App
+
+
+Stacked as list items.
+
+🎉 You have now created a dynamic React list.
+
+This is one of the most important skills in frontend development.
+
+🧠 What You Just Learned (major concepts)
+✔ How to render multiple components
+✔ How to pass props
+✔ How to use .map()
+✔ How to visualize React state through dummy data
+✔ How components talk to each other parent → child
+
+You're building your intuition now.
+
+🎯 NEXT STEP — Make Todo Items Clickable (Selecting a Todo)
+
+This teaches you:
+
+Event handling in React
+
+Lifting state up
+
+Passing functions as props
+
+Updating UI based on user interaction
+
+This is the foundation for the entire TodoDetails panel (right side).
+
+If you're ready for this essential part, say:
+
+👉 “Continue Phase 2: Add click behavior + select todo”
+
+
+Perfect — this is one of the most important lessons in React:
+
+How to make UI interactive by lifting state up and passing event handlers down.
+
+This will unlock your ability to build any dynamic UI, not just this Todo app.
+
+Let’s take it slowly and clearly.
+
+🎯 Your Goal in This Step
+
+When a user clicks a <TodoItem />, it should:
+
+Highlight that todo in the left list
+
+Tell the parent (App.jsx) which todo was selected
+
+Display that todo’s details on the right (TodoDetails.jsx)
+
+This is textbook React:
+Child → Parent → Child communication through state lifting.
+
+🧠 React Concept You Must Learn Here
+⭐ State belongs to the component that needs to control it.
+
+The selected todo affects:
+
+TodoList (to highlight selected)
+
+TodoDetails (to show details)
+
+So the selected todo state must live in:
+
+👉 App.jsx (the parent)
+🟦 Step 1 — Add State in App.jsx for Selected Todo
+
+Open App.jsx and add React state:
+
+import { useState } from "react";
+
+export default function App() {
+const [selectedTodo, setSelectedTodo] = useState(null);
+
+return (
+<div style={{ display: "flex", height: "100vh" }}>
+<TodoList setSelectedTodo={setSelectedTodo} />
+<TodoDetails selectedTodo={selectedTodo} />
+</div>
+);
+}
+
+✔ App now controls which todo is selected
+✔ App passes setter down to TodoList
+✔ App passes selectedTodo to TodoDetails
+
+This is prop drilling — and it’s the foundation of understanding React before learning any state libraries.
+
+🟦 Step 2 — TodoList Must Notify App When Item Is Clicked
+
+Modify TodoList.jsx to accept this prop:
+
+export default function TodoList({ setSelectedTodo }) {
+
+
+Then update your .map loop:
+
+{dummyTodos.map(todo => (
+<TodoItem
+key={todo.id}
+todo={todo}
+setSelectedTodo={setSelectedTodo}
+/>
+))}
+
+✔ You passed the click handler down
+✔ Each TodoItem can now call it
+🟦 Step 3 — Add Click Behavior in TodoItem
+
+Open TodoItem.jsx and update:
+
+export default function TodoItem({ todo, setSelectedTodo }) {
+return (
+<div
+style={{
+padding: "8px",
+borderBottom: "1px solid #eee",
+cursor: "pointer"
+}}
+onClick={() => setSelectedTodo(todo)}
+>
+{todo.title}
+</div>
+);
+}
+
+
+This is BIG.
+
+✔ Clicking the item triggers state change in App.jsx
+✔ React re-renders the entire UI
+✔ TodoDetails receives the selected todo and updates
+
+This is how React builds interactive apps.
+
+🟦 Step 4 — Show Selected Todo in the Details Panel
+
+Open TodoDetails.jsx:
+
+export default function TodoDetails({ selectedTodo }) {
+if (!selectedTodo) {
+return <div style={{ padding: "10px", width: "60%" }}>Select a todo…</div>;
+}
+
+return (
+<div style={{ padding: "10px", width: "60%" }}>
+<h2>{selectedTodo.title}</h2>
+<p>Status: {selectedTodo.completed ? "Completed" : "Not Completed"}</p>
+</div>
+);
+}
+
+✔ When nothing is selected → show placeholder
+✔ When a todo is clicked → show details
+
+Now your UI is alive.
+
+🎉 What You Should See Now
+
+Left side: list of todos
+
+Clicking a todo immediately updates the right panel
+
+The UI reacts to your clicks
+
+State is flowing correctly
+
+You just built the core interaction pattern of all React apps.
+
+🧠 What You Learned in This Step
+
+This is MAJOR React knowledge:
+
+✔ How to lift state up to a parent
+✔ How child components update parent state using callbacks
+✔ How props flow down and events flow up
+✔ How to render dynamic details based on user interaction
+✔ How React re-renders based on state changes
+
+This is real learning — not blindly writing code.
+
+🟢 NEXT PHASE (Optional Right Now)
+
+To continue:
+
+1. Highlight the selected todo in the list
+
+This teaches conditional styling.
+
+2. Replace dummy data with API data
+
+This teaches useEffect and async API calls.
+
+3. Add controlled form inside TodoDetails
+
+This teaches controlled inputs.
+
+4. Add Update / Delete functionality
+
+This teaches backend integration.
+
+If you're ready to move on, say:
+
+👉 “Continue Phase 3: Fetch todos from backend”
+
+
+
+
 
 
 

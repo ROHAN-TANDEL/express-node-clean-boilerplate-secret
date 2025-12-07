@@ -1,9 +1,18 @@
-export default function TodoDetails()
+export default function TodoDetails({ selectedTodo })
 {
+    if (!selectedTodo) {
+        return (
+            <div style={{ padding: "10px", width: "100%" }}>Select a todo...</div>
+        );  
+    }
+
     return (
-        <div className="todoDetails" style={{ padding: "10px", width: "60%" }}>
+        <div style={{ padding: "10px", width: "100%" }}>
             <h2>Todo Details</h2>
-            {/* The selected todo will show here */}
+            <div className="todoDetails">
+                <h2>{selectedTodo.title}</h2>
+                <p> Status : { selectedTodo.completed ? "Completed" : "Work in Progress" } </p>
+            </div>
         </div>
     );
 }
