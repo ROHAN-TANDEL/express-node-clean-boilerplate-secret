@@ -1,12 +1,12 @@
 import TOdoItem from "../TodoItem/TodoItem.jsx";
 
-export default function TodoList({ setSelectedTodo }) {
+export default function TodoList({ todos, setSelectedTodo }) {
     return (
         <div className="TodoList" style={{ borderRight: "1px solid #ccc", padding: "10px", width: "40%" }}>
             <h2>Todo List</h2>
 
             {
-                todoList().map(todo => (
+                todos.map(todo => (
                     <TOdoItem key={todo.id} todo={todo} setSelectedTodo={setSelectedTodo} />
                 ))
             }
