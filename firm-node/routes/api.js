@@ -1,4 +1,4 @@
-//todo: again express is initiated for Router, why its already done in index.js right?
+//todo: again express is initiated for Router, why its already done in index.js right?1
 const router = require('express').Router();
 
 // invoking controller
