@@ -2,7 +2,7 @@ const userService = require('../services/user.service');
 
 async function getUser(req, res) {
     try {
-        const { userId } = req.query;
+        const { userId } = req.params;
 
         if (!userId) {
             return res.status(400).json({ error: 'userId required' });
