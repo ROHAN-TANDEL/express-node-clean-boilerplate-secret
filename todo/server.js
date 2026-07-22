@@ -13,6 +13,9 @@ app.post('/customer', customerCreate);
 app.post('/order', orderCreate);
 app.post('/product', productCreate);
 
+app.post('/user/:userId', getUser);
+app.post('/users', getUsers);
+
 async function pgConnect()
 {
     return new Pool({
@@ -146,5 +149,46 @@ async function productCreate(req, res)
         }
     });
 }
+
+async function getUser(req, res)
+{
+    const { userId } = req.params;
+
+    if (!userId) {
+        return res.status(404).json({ error: 'validation errors', message: 'user does not exist'});
+    }
+
+    const pool = await pgConnect();
+
+    const userQuery = `SELECT * FROM users WHERE user_id = ${userId}`;
+
+    const result = await pool.query(userQuery);
+
+    if(!result || !result.rows || !result.rows.length) {
+        return res.status(404).json({ error: 'user does not exist'});
+    }
+    const { password, ...safeResult} = result?.rows[0];
+    return res.status(200).json(safeResult);
+
+}
+
+async function getUsers(req, res)
+{
+    const pool = await pgConnect();
+
+    const userQuery = `SELECT * FROM users`;
+
+    const result = await pool.query(userQuery);
+
+    if(!result || !result.rows || !result.rows.length) {
+        return res.status(404).json({ error: 'user does not exist'});
+    }
+
+    const cleanRows = result.rows.map(({ password, ...userWithoutPassword }) => userWithoutPassword);
+
+    return res.status(200).json(cleanRows);
+
+}
+
 
 app.listen(3000, () => console.log('Listening on port 3000'));
