@@ -1,10 +1,27 @@
 import express from "express";
-import healthRouter from "./routes/health.js";
 
-const app = express();
+import { ApplicationContext } from "./context/application-context.js";
 
-app.use(express.json());
+import { createHealthModule } from "./modules/health/index.js";
 
-app.use("/health", healthRouter);
+export function createApp(
 
-export default app;
+    context: ApplicationContext
+
+) {
+
+    const app = express();
+
+    app.use(express.json());
+
+    app.use(
+
+        "/health",
+
+        createHealthModule(context)
+
+    );
+
+    return app;
+
+}
