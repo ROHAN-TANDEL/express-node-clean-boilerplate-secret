@@ -1,20 +1,28 @@
 import { bootstrap } from "./bootstrap";
 
-import { config } from "./config";
+const {
 
-const app = bootstrap();
+    app,
+
+    context
+
+} = bootstrap();
 
 app.listen(
 
-    config.app.port,
+    context.config.app.port,
 
     () => {
 
-        console.log(
+        context.logger.info({
 
-            ` ${config.app.name} running on port ${config.app.port}`
+            service: context.config.app.name,
 
-        );
+            environment: context.config.app.environment,
+
+            port: context.config.app.port
+
+        }, "HTTP Server Started");
 
     }
 
