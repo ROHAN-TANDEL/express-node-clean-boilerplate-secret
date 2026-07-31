@@ -1,10 +1,21 @@
-import dotenv from "dotenv";
-import app from "./app.js";
+import { bootstrap } from "./bootstrap";
 
-dotenv.config();
+import { config } from "./config";
 
-const PORT = Number(process.env.PORT) || 3000;
+const app = bootstrap();
 
-app.listen(PORT, () => {
-    console.log(`API running on http://localhost:${PORT}`);
-});
+app.listen(
+
+    config.app.port,
+
+    () => {
+
+        console.log(
+
+            ` ${config.app.name} running on port ${config.app.port}`
+
+        );
+
+    }
+
+);
