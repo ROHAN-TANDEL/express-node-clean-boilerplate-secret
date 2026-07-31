@@ -1,11 +1,14 @@
-import { config } from "../config/index.js";
-import { logger } from "../logger/index.js";
+import { config } from "../config";
+
+import { createLogger } from "../logger";
 
 import { createApp } from "../app.js";
 
-import { ApplicationContext } from "../context/application-context.js";
+import type { ApplicationContext } from "../context/application-context.js";
 
 export function bootstrap() {
+
+    const logger = createLogger(config);
 
     const context: ApplicationContext = {
 
@@ -15,6 +18,14 @@ export function bootstrap() {
 
     };
 
-    return createApp(context);
+    const app = createApp(context);
+
+    return {
+
+        app,
+
+        context
+
+    };
 
 }

@@ -1,15 +1,19 @@
-export const logger = {
+import pino from "pino";
 
-    info(message: string) {
+import type { AppConfig } from "../config/types.js";
 
-        console.log(`[INFO] ${message}`);
+import { createLoggerOptions } from "./options.js";
 
-    },
+export function createLogger(
 
-    error(message: string) {
+    config: Readonly<AppConfig>
 
-        console.error(`[ERROR] ${message}`);
+) {
 
-    }
+    return pino(
 
-};
+        createLoggerOptions(config)
+
+    );
+
+}

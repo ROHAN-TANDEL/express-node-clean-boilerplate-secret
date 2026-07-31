@@ -1,16 +1,36 @@
-import dotenv from "dotenv";
+import "./env.js";
 
-dotenv.config();
+import type {
+    AppConfig,
+    Environment
+} from "./types.js";
 
-export const config = Object.freeze({
+import type { LevelWithSilent } from "pino";
+
+const environment: Environment =
+    (process.env.NODE_ENV as Environment | undefined) ??
+    "development";
+
+const loggerLevel: LevelWithSilent =
+    environment === "production"
+        ? "info"
+        : "debug";
+
+export const config: Readonly<AppConfig> = Object.freeze({
 
     app: {
 
-        name: process.env.APP_NAME ?? "API",
+        name: process.env.APP_NAME ?? "Backend Engineering Lab",
 
         port: Number(process.env.PORT ?? 3000),
 
-        environment: process.env.NODE_ENV ?? "development"
+        environment
+
+    },
+
+    logger: {
+
+        level: loggerLevel
 
     }
 
