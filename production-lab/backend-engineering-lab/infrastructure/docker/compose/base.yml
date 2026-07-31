@@ -1,0 +1,12 @@
+name: backend-engineering-lab
+
+networks:
+  backend-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  rabbitmq-data:
+  grafana-data:
+  prometheus-data:
