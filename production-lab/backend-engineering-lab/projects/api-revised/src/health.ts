@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import { healthController } from "./health-controller";
 
 export function registerHealth(
 
@@ -10,15 +11,7 @@ export function registerHealth(
 
     app.get("/health", (req, res) => {
 
-        context.logger.info("Health endpoint called");
-
-        res.json({
-
-            status: "healthy",
-
-            service: context.config.app.name
-
-        });
+        healthController(context, req, res);
 
     });
 
