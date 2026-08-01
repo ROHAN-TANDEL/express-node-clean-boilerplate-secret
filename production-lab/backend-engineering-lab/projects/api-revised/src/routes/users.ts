@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import type { ApplicationContext } from "../context";
 
-import {createUserByIdController, usersController} from "../controllers/users-controller";
+import {createUserByIdController, usersController, createCreateUserController} from "../controllers/users-controller";
 
 export function registerUsers(
     app: Express,
@@ -23,5 +23,14 @@ export function registerUsers(
         createUserByIdController(context)
 
     );
+
+
+    app.post(
+        "/users",
+        createCreateUserController(
+            context
+        )
+    );
+
 
 }

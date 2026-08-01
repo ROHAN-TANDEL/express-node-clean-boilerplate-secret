@@ -1,6 +1,8 @@
 import type { ApplicationContext } from "../context";
 import { rows, row } from "../database/query";
 import type { User } from "../entities/user";
+import type { CreateUserInput } from "../validators/user";
+
 
 export async function findAllUsers(
     context: ApplicationContext
@@ -37,5 +39,40 @@ export async function findUserById(
     ORDER BY user_id
     `, [id]
     );
+
+}
+
+
+export async function createUserRepository(
+
+    context: ApplicationContext,
+
+    input: CreateUserInput
+
+) {
+
+    return row<User>(`
+
+        INSERT INTO users ( 
+            username, firstname,
+            email, password
+
+        )
+
+        VALUES ( $1, $2, $3, $4 )
+
+        RETURNING user_id, firstname, email
+
+    `, [
+
+        input.email,
+
+        input.firstname,
+
+        input.email,
+
+        input.email
+
+    ]);
 
 }

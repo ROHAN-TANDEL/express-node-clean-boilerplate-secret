@@ -1,5 +1,6 @@
 import type { ApplicationContext } from "../context";
-import {findAllUsers, findUserById } from "../repositories/users-repository";
+import {findAllUsers, findUserById, createUserRepository } from "../repositories/users-repository";
+import type { CreateUserInput } from "../validators/user";
 
 
 export async function getUsers(
@@ -20,6 +21,25 @@ export async function getUserById(
 
     return findUserById(
         id
+    );
+
+}
+
+
+export async function createUser(
+
+    context: ApplicationContext,
+
+    input: CreateUserInput
+
+) {
+
+    return createUserRepository(
+
+        context,
+
+        input
+
     );
 
 }
