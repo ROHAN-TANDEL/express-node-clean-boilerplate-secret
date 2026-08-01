@@ -1,4 +1,6 @@
 import express from "express";
+import { registerUsers } from "./users";
+import { registerHealth } from "./health";
 
 export function createApp(context:any) {
 
@@ -6,16 +8,27 @@ export function createApp(context:any) {
 
     app.use(express.json());
 
-    app.get("/health", (req, res) => {
+    registerHealth(app, context);
 
-        context.logger.info("Health endpoint called", context);
+    app.get("/version", (req, res) => {
+
         res.json({
 
-            status: "healthy",
-            app: context.config.app
+            version: "1.0.0"
+
         });
 
     });
+
+
+    app.get("/ping", (req, res) => {
+
+        res.send({message:"pong"});
+
+    });
+
+
+    registerUsers(app);
 
     return app;
 

@@ -2,6 +2,7 @@ import express from "express";
 import {createLogger} from "../logger";
 import config from "../config";
 import { createApp } from "../app";
+import type { ApplicationContext } from "../context/context";
 
 export function bootstrap() {
 
@@ -9,7 +10,7 @@ export function bootstrap() {
 
     const logger = createLogger(config);
 
-    const context = {
+    const context: ApplicationContext = {
 
         logger,
 
