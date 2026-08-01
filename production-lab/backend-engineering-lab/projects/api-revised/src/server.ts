@@ -7,8 +7,17 @@ dotenv.config();
 
 const app = express();
 
-const logger = pino();
+const logger = pino({
 
+    level: "debug",
+
+    transport: {
+
+        target: "pino-pretty"
+
+    }
+
+});
 
 const config = {
 
@@ -34,6 +43,6 @@ app.get("/health", (req, res) => {
 // server started
 app.listen(config.port, () => {
 
-    logger.info("Server Started pino comment");
+    logger.info({status:"Server Started pino comment"});
 
 });
