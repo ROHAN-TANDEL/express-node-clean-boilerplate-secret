@@ -9,18 +9,6 @@ import {bootstrap} from "./bootstrap";
 
 const {app, config, logger} = bootstrap();
 
-app.use(express.json());
-// new route
-app.get("/health", (req, res) => {
-
-    res.json({
-
-        status: "healthy V3"
-
-    });
-
-});
-
 // server started
 app.listen(config.port, () => {
 
