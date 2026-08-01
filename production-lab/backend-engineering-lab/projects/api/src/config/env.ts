@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 
 import { environmentSchema } from "./schema.js";
+import { InvalidEnvironmentError } from "../errors/index.js";
 
 dotenv.config();
 
@@ -8,11 +9,11 @@ const result = environmentSchema.safeParse(process.env);
 
 if (!result.success) {
 
-    throw new Error(
+    const message = result.error.issues
+        .map(issue => `${issue.path.join(".")}: ${issue.message}`)
+        .join("\n");
 
-        JSON.stringify(result.error.format(), null, 2)
-
-    );
+    throw new InvalidEnvironmentError(message);
 
 }
 

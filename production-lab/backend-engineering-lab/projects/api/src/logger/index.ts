@@ -5,15 +5,11 @@ import type { AppConfig } from "../config/types.js";
 import { createLoggerOptions } from "./options.js";
 
 export function createLogger(
-
     config: Readonly<AppConfig>
-
 ) {
 
-    return pino(
+    const options = createLoggerOptions(config);
 
-        createLoggerOptions(config)
-
-    );
+    return pino(options);
 
 }

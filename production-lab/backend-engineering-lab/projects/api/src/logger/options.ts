@@ -3,9 +3,7 @@ import type { LoggerOptions } from "pino";
 import type { AppConfig } from "../config/types.js";
 
 export function createLoggerOptions(
-
     config: Readonly<AppConfig>
-
 ): LoggerOptions {
 
     return {

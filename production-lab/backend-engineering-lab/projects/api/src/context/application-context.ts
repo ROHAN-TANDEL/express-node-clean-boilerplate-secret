@@ -1,10 +1,10 @@
 import { config } from "../config";
-import { logger } from "../logger";
+import { Logger } from "pino";
 
 export interface ApplicationContext {
 
     config: typeof config;
 
-    logger: typeof logger;
+    logger: Logger;
 
 }
