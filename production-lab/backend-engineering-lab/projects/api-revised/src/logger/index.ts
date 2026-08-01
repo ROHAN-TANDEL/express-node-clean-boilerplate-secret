@@ -1,6 +1,9 @@
 import pino from "pino";
-import loggerOptions from "./options";
+import { createLoggerOptions } from "./options";
 
-const logger = pino(loggerOptions);
+export function createLogger() {
 
-export default logger;
+    const loggerOptions = createLoggerOptions();
+    return pino(loggerOptions);
+
+}

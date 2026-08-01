@@ -2,9 +2,11 @@
 
 const options = {
 
-    level: "debug",
+    level: "debug", // we need config here
     transport :  { target: "pino-pretty" }
 
 }
 
-export default options;
+export function createLoggerOptions() {
+    return options;
+}

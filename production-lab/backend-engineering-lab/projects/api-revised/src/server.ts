@@ -1,11 +1,12 @@
 //new express
 import express from "express";
 import dotenv from "dotenv";
-import logger from "./logger";
+import { createLogger } from "./logger";
 import config from "./config";
 
 
 const app = express();
+const logger = createLogger();
 
 // new route
 app.get("/health", (req, res) => {
