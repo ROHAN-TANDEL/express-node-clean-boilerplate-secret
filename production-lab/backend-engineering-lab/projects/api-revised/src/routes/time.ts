@@ -1,6 +1,6 @@
 import { Express } from "express";
-import {ApplicationContext} from "./context/context";
-import {getDatabaseTime} from "./time-service";
+import {ApplicationContext} from "../context";
+import {getDatabaseTime} from "../services/time-service";
 
 export function registerTime(
 

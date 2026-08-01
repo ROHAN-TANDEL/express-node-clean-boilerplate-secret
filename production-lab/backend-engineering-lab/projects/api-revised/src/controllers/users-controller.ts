@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 
-import type { ApplicationContext } from "./context/context";
-import {getHealth} from "./health-service";
+import type { ApplicationContext } from "../context";
 
-export function healthController(
+import {getUsers} from "../services/users-service";
+
+export function usersController(
 
     context: ApplicationContext
 
@@ -17,7 +18,7 @@ export function healthController(
 
     ) {
 
-        const response = await getHealth(context);
+        const response = await getUsers(context);
         res.json(response);
     }
 }

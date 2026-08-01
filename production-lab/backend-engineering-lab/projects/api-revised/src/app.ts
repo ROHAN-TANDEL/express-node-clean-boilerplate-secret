@@ -1,7 +1,7 @@
 import express from "express";
-import { registerUsers } from "./users";
-import { registerHealth } from "./health";
-import {registerTime} from "./time";
+import { registerUsers } from "./routes/users";
+import { registerHealth } from "./routes/health";
+import {registerTime} from "./routes/time";
 
 export function createApp(context:any) {
 
@@ -32,7 +32,7 @@ export function createApp(context:any) {
 
     registerTime(app, context);
 
-    registerUsers(app);
+    registerUsers(app, context);
 
     return app;
 
