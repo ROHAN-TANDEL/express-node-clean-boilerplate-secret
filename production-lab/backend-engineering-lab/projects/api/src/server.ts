@@ -1,18 +1,13 @@
-import { bootstrap } from "./bootstrap/index.js";
+import { bootstrap } from "./bootstrap";
+import { registerShutdown } from "./lifecycle";
 
 async function start() {
 
     try {
 
-        const {
+        const { app,  context } = await bootstrap();
 
-            app,
-
-            context
-
-        } = await bootstrap();
-
-        app.listen(
+        const server = app.listen(
 
             context.config.app.port,
 
@@ -31,6 +26,8 @@ async function start() {
             }
 
         );
+
+        registerShutdown(server, context.logger);
 
     }
 
