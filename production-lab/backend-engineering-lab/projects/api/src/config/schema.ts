@@ -1,15 +1,16 @@
-import "./env.js";
+import { z } from "zod";
 
-export const config = Object.freeze({
+export const environmentSchema = z.object({
 
-    app: {
+    APP_NAME: z.string(),
 
-        name: process.env.APP_NAME ?? "Backend Engineering Lab",
+    PORT: z.coerce.number().int().positive(),
 
-        port: Number(process.env.PORT ?? 3000),
-
-        environment: process.env.NODE_ENV ?? "development"
-
-    }
+    NODE_ENV: z.enum([
+        "development",
+        "test",
+        "staging",
+        "production"
+    ])
 
 });

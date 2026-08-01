@@ -1,29 +1,47 @@
-import { bootstrap } from "./bootstrap";
+import { bootstrap } from "./bootstrap/index.js";
 
-const {
+async function start() {
 
-    app,
+    try {
 
-    context
+        const {
 
-} = bootstrap();
+            app,
 
-app.listen(
+            context
 
-    context.config.app.port,
+        } = await bootstrap();
 
-    () => {
+        app.listen(
 
-        context.logger.info({
+            context.config.app.port,
 
-            service: context.config.app.name,
+            () => {
 
-            environment: context.config.app.environment,
+                context.logger.info({
 
-            port: context.config.app.port
+                    service: context.config.app.name,
 
-        }, "HTTP Server Started");
+                    environment: context.config.app.environment,
+
+                    port: context.config.app.port
+
+                }, "HTTP Server Started");
+
+            }
+
+        );
 
     }
 
-);
+    catch (error) {
+
+        console.error(error);
+
+        process.exit(1);
+
+    }
+
+}
+
+start();

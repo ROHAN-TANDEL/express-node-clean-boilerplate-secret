@@ -1,36 +1,28 @@
-import "./env.js";
+import { env } from "./env.js";
 
-import type {
-    AppConfig,
-    Environment
-} from "./types.js";
+import type { AppConfig } from "./types.js";
 
-import type { LevelWithSilent } from "pino";
-
-const environment: Environment =
-    (process.env.NODE_ENV as Environment | undefined) ??
-    "development";
-
-const loggerLevel: LevelWithSilent =
-    environment === "production"
-        ? "info"
-        : "debug";
+import { getDefaultLogLevel } from "./defaults.js";
 
 export const config: Readonly<AppConfig> = Object.freeze({
 
     app: {
 
-        name: process.env.APP_NAME ?? "Backend Engineering Lab",
+        name: env.APP_NAME,
 
-        port: Number(process.env.PORT ?? 3000),
+        port: env.PORT,
 
-        environment
+        environment: env.NODE_ENV
 
     },
 
     logger: {
 
-        level: loggerLevel
+        level: getDefaultLogLevel(
+
+            env.NODE_ENV
+
+        )
 
     }
 

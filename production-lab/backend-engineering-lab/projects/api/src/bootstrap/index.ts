@@ -6,7 +6,7 @@ import { createApp } from "../app.js";
 
 import type { ApplicationContext } from "../context/application-context.js";
 
-export function bootstrap() {
+export async function bootstrap() {
 
     const logger = createLogger(config);
 
