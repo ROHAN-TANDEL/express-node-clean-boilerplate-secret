@@ -9,6 +9,7 @@ import {bootstrap} from "./bootstrap";
 
 const {app, config, logger} = bootstrap();
 
+app.use(express.json());
 // new route
 app.get("/health", (req, res) => {
 
