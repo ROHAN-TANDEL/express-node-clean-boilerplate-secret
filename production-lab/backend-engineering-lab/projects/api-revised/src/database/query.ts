@@ -33,3 +33,25 @@ export async function rows<T>(
     return result.rows as T[];
 
 }
+
+
+
+export async function row<T>(
+
+    sql: string,
+
+    values: unknown[] = []
+
+): Promise<T | undefined> {
+
+    const result = await rows<T>(
+
+        sql,
+
+        values
+
+    );
+
+    return result[0];
+
+}
