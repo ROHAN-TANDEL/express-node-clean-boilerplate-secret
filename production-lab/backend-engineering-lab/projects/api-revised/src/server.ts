@@ -1,23 +1,11 @@
 //new express
 import express from "express";
 import dotenv from "dotenv";
-import pino from "pino";
 import logger from "./logger";
+import config from "./config";
 
-dotenv.config();
 
 const app = express();
-
-
-const config = {
-
-    port: Number(
-
-        process.env.PORT ?? 3000
-
-    )
-
-};
 
 // new route
 app.get("/health", (req, res) => {
