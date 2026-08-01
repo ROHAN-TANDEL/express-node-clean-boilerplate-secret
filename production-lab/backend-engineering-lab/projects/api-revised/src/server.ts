@@ -2,11 +2,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import { createLogger } from "./logger";
-import config from "./config";
+// import config from "./config";
+import {bootstrap} from "./bootstrap";
 
+// const logger = createLogger(config);
 
-const app = express();
-const logger = createLogger(config);
+const {app, config, logger} = bootstrap();
 
 // new route
 app.get("/health", (req, res) => {
