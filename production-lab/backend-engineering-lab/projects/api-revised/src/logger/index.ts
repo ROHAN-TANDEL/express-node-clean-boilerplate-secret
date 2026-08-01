@@ -1,6 +1,6 @@
 import pino from "pino";
-import options from "./options";
+import loggerOptions from "./options";
 
-const logger = pino(options);
+const logger = pino(loggerOptions);
 
 export default logger;
