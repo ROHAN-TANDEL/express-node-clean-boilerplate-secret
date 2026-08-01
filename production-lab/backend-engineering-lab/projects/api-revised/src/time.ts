@@ -1,5 +1,7 @@
 import { Express } from "express";
 import {ApplicationContext} from "./context/context";
+import {getDatabaseTime} from "./time-service";
+
 export function registerTime(
 
     app: Express,
@@ -13,15 +15,9 @@ export function registerTime(
 
         async (req, res) => {
 
-            const result = await context.database.query(
+            const result = await getDatabaseTime(context);
 
-                "SELECT NOW()"
-            );
-
-            res.json(
-
-                result.rows
-            );
+            res.json(result);
 
         }
 
