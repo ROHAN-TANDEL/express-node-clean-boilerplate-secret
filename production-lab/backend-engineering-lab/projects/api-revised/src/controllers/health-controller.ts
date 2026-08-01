@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import type { ApplicationContext } from "./context";
-import {getHealth} from "./health-service";
+import type { ApplicationContext } from "../context";
+import {getHealth} from "../services/health-service";
 
 export function healthController(
 

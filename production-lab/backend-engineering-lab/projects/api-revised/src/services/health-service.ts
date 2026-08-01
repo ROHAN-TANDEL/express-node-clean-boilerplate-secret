@@ -1,8 +1,8 @@
 import os from "os";
 
-import type { ApplicationContext } from "./context";
+import type { ApplicationContext } from "../context";
 
-import {checkDatabaseHealth} from "./database/health";
+import {checkDatabaseHealth} from "../database/health";
 
 export async function getHealth(
 
