@@ -1,0 +1,1 @@
+// use-cases: Marks the reserved logger API module; why: future logger-facing API helpers have a stable location; without: the empty file conveys no intent; rules: use a documentation comment until an exported API is required.

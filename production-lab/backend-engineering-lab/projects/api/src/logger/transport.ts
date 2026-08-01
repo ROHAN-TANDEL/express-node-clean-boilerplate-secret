@@ -1,0 +1,1 @@
+// use-cases: Marks the reserved logger transport module; why: future transport helpers have a stable location; without: the empty file conveys no intent; rules: use a documentation comment until custom transports are implemented.
