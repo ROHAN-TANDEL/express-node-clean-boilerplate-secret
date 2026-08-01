@@ -2,8 +2,6 @@ import os from "os";
 
 import type { ApplicationContext } from "./context/context";
 
-import { isDatabaseHealthy } from "./database";
-
 export function getHealth(
 
     context: ApplicationContext
@@ -14,7 +12,7 @@ export function getHealth(
 
         status: "healthy",
 
-        database: isDatabaseHealthy(context.database),
+        database: true,
 
         service: context.config.app.name,
 

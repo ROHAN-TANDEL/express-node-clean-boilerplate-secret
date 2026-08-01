@@ -20,13 +20,11 @@ export function createApp(context:any) {
 
     });
 
-
     app.get("/ping", (req, res) => {
 
         res.send({message:"pong"});
 
     });
-
 
     registerUsers(app);
 

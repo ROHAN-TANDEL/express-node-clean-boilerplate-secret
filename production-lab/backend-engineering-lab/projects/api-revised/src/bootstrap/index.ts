@@ -3,12 +3,25 @@ import {createLogger} from "../logger";
 import config from "../config";
 import { createApp } from "../app";
 import type { ApplicationContext } from "../context/context";
+import { database } from "../database";
 
-export function bootstrap() {
-
-    const database = { connected: true };
+export async function bootstrap() {
 
     const logger = createLogger(config);
+
+    try {
+
+        await database.connect();
+
+    }
+
+    catch (error) {
+
+        logger.fatal(error);
+
+        throw error;
+
+    }
 
     const context: ApplicationContext = {
 
