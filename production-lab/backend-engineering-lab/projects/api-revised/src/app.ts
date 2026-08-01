@@ -1,6 +1,7 @@
 import express from "express";
 import { registerUsers } from "./users";
 import { registerHealth } from "./health";
+import {registerTime} from "./time";
 
 export function createApp(context:any) {
 
@@ -9,6 +10,7 @@ export function createApp(context:any) {
     app.use(express.json());
 
     registerHealth(app, context);
+
 
     app.get("/version", (req, res) => {
 
@@ -20,11 +22,15 @@ export function createApp(context:any) {
 
     });
 
+
     app.get("/ping", (req, res) => {
 
         res.send({message:"pong"});
 
     });
+
+
+    registerTime(app, context);
 
     registerUsers(app);
 
