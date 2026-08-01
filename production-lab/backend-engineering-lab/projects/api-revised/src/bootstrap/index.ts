@@ -5,9 +5,23 @@ import { createApp } from "../app";
 
 export function bootstrap() {
 
+    const database = { connected: true };
+
     const logger = createLogger(config);
 
-    const app = createApp(logger);
+    const context = {
+
+        logger,
+
+        config,
+
+        database
+
+    };
+
+    const app = createApp(context);
 
     return {app, config, logger};
+
+
 }
