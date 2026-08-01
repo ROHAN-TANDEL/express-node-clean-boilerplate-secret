@@ -9,10 +9,6 @@ export function registerHealth(
 
 ) {
 
-    app.get("/health", (req, res) => {
-
-        healthController(context, req, res);
-
-    });
+    app.get("/health", healthController(context));
 
 }

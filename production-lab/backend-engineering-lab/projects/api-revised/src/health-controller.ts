@@ -1,33 +1,23 @@
 import { Request, Response } from "express";
 
 import type { ApplicationContext } from "./context/context";
+import {getHealth} from "./health-service";
 
 export function healthController(
 
-    context: ApplicationContext,
-
-    req: Request,
-
-    res: Response
+    context: ApplicationContext
 
 ) {
 
-    context.logger.info("Health endpoint called");
+    return function (
 
-    res.json({
+        req: Request,
 
-        status: "healthy",
+        res: Response
 
-        service: context.config.app.name,
+    ) {
 
-        uptime: process.uptime(),
-
-        node: process.version,
-
-        platform: process.platform,
-
-        memory: process.memoryUsage()
-
-    });
-
+        const response = getHealth(context);
+        res.json(response);
+    }
 }
