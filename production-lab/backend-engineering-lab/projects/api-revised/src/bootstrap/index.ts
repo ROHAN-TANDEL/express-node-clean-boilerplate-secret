@@ -5,8 +5,9 @@ import { createApp } from "../app";
 
 export function bootstrap() {
 
-    const app = createApp();
-
     const logger = createLogger(config);
+
+    const app = createApp(logger);
+
     return {app, config, logger};
 }

@@ -1,6 +1,6 @@
 import express from "express";
 
-export function createApp() {
+export function createApp(logger:any) {
 
     const app = express();
 
@@ -8,6 +8,7 @@ export function createApp() {
 
     app.get("/health", (req, res) => {
 
+        logger.info("Health endpoint called");
         res.json({
 
             status: "healthy"
