@@ -1,6 +1,6 @@
 import os from "os";
 
-import type { ApplicationContext } from "./context/context";
+import type { ApplicationContext } from "./context";
 
 import {checkDatabaseHealth} from "./database/health";
 

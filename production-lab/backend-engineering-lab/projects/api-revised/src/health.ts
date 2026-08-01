@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { healthController } from "./health-controller";
-import type { ApplicationContext } from "./context/context";
+import type { ApplicationContext } from "./context";
 
 export function registerHealth(
 

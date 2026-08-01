@@ -1,8 +1,5 @@
-import type {
-
-    ApplicationContext
-
-} from "./context/context";
+import type { ApplicationContext } from "./context";
+import {getCurrentDatabaseTime} from "./repositories/time-repository";
 
 export async function getDatabaseTime(
 
@@ -10,11 +7,8 @@ export async function getDatabaseTime(
 
 ) {
 
-    const result = await context.database.query(
-
-        "SELECT NOW()"
+    return getCurrentDatabaseTime(
+        context
     );
-
-    return result.rows[0];
 
 }
