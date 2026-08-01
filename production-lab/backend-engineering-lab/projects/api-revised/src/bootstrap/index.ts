@@ -1,15 +1,33 @@
 import express from "express";
 import {createLogger} from "../logger";
 import config from "../config";
+
 import { createApp } from "../app";
+import type { ApplicationContext } from "../context/context";
 
-export function bootstrap() {
+import { database } from "../database";
+import {checkDatabaseHealth} from "../database/health";
 
-    const database = { connected: true };
+
+export async function bootstrap() {
 
     const logger = createLogger(config);
 
-    const context = {
+    try {
+
+        await database.connect();
+        await checkDatabaseHealth();
+    }
+
+    catch (error) {
+
+        logger.fatal(error);
+
+        throw error;
+
+    }
+
+    const context: ApplicationContext = {
 
         logger,
 

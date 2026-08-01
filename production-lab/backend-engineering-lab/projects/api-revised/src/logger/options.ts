@@ -4,6 +4,5 @@ export function createLoggerOptions(config :  any) {
         level: config.logger.level, // we need config here
         transport :  { target: "pino-pretty" },
 
-
     }
 }
