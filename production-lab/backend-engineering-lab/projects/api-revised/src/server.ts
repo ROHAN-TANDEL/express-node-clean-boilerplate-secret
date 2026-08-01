@@ -1,10 +1,14 @@
 //new express
 import express from "express";
 import dotenv from "dotenv";
+import pino from "pino";
 
 dotenv.config();
 
 const app = express();
+
+const logger = pino();
+
 
 const config = {
 
@@ -30,6 +34,6 @@ app.get("/health", (req, res) => {
 // server started
 app.listen(config.port, () => {
 
-    console.log("Server Started");
+    logger.info("Server Started pino comment");
 
 });
