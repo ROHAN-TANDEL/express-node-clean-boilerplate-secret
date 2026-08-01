@@ -1,10 +1,11 @@
 import type { ApplicationContext } from "../context";
+import { rows } from "../database/query";
 
 export async function findAllUsers(
     context: ApplicationContext
 ) {
 
-    const result = await context.database.query(
+    return rows(
         `
     SELECT
         user_id,
@@ -14,7 +15,5 @@ export async function findAllUsers(
     ORDER BY user_id
     `
     );
-
-    return result.rows;
 
 }
