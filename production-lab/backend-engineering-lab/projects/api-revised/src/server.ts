@@ -6,7 +6,7 @@ import config from "./config";
 
 
 const app = express();
-const logger = createLogger();
+const logger = createLogger(config);
 
 // new route
 app.get("/health", (req, res) => {
