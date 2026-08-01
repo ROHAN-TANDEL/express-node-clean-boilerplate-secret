@@ -9,7 +9,7 @@ export function healthController(
 
 ) {
 
-    return function (
+    return async function (
 
         req: Request,
 
@@ -17,7 +17,7 @@ export function healthController(
 
     ) {
 
-        const response = getHealth(context);
+        const response = await getHealth(context);
         res.json(response);
     }
 }

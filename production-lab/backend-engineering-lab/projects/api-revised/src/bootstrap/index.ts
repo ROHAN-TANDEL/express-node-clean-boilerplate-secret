@@ -1,9 +1,13 @@
 import express from "express";
 import {createLogger} from "../logger";
 import config from "../config";
+
 import { createApp } from "../app";
 import type { ApplicationContext } from "../context/context";
+
 import { database } from "../database";
+import {checkDatabaseHealth} from "../database/health";
+
 
 export async function bootstrap() {
 
@@ -12,7 +16,7 @@ export async function bootstrap() {
     try {
 
         await database.connect();
-
+        await checkDatabaseHealth();
     }
 
     catch (error) {

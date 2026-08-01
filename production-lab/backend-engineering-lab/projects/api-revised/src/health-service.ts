@@ -2,17 +2,20 @@ import os from "os";
 
 import type { ApplicationContext } from "./context/context";
 
-export function getHealth(
+import {checkDatabaseHealth} from "./database/health";
+
+export async function getHealth(
 
     context: ApplicationContext
 
 ) {
 
+    const database = await checkDatabaseHealth();
     return {
 
         status: "healthy",
 
-        database: true,
+        database: database,
 
         service: context.config.app.name,
 
