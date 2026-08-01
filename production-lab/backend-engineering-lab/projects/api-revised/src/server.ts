@@ -2,22 +2,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import pino from "pino";
+import logger from "./logger";
 
 dotenv.config();
 
 const app = express();
 
-const logger = pino({
-
-    level: "debug",
-
-    transport: {
-
-        target: "pino-pretty"
-
-    }
-
-});
 
 const config = {
 
