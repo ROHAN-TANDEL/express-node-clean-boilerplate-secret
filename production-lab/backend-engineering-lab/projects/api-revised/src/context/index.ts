@@ -1,12 +1,12 @@
 import type {Logger} from "pino";
 import type {Pool} from "pg";
-import AppConfig  from "../config";
+import type { AppConfig } from "../config/types";
 
 export interface ApplicationContext {
 
     logger: Logger;
 
-    config: typeof AppConfig;
+    config: AppConfig;
 
     database: Pool;
 
@@ -17,7 +17,7 @@ export function createContext(
 
     logger: Logger,
 
-    config: typeof AppConfig,
+    config: AppConfig,
 
     database: Pool
 
