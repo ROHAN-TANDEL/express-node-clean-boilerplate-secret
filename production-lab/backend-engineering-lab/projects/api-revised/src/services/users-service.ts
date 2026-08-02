@@ -1,5 +1,7 @@
 import type { ApplicationContext } from "../context";
-import {findAllUsers, findUserById, createUserRepository, findUserByEmail } from "../repositories/users-repository";
+
+import { usersRepository } from "../repositories/users-repository";
+
 import type { CreateUserInput } from "../validators/user";
 import {BadRequestError} from "../errors/bad-request";
 
@@ -8,7 +10,7 @@ export async function getUsers(
     context: ApplicationContext
 ) {
 
-    return findAllUsers(
+    return usersRepository.findAllUsers(
         context
     );
 
@@ -20,7 +22,7 @@ export async function getUserById(
     id: number
 ) {
 
-    return findUserById(
+    return usersRepository.findUserById(
         id
     );
 
@@ -38,7 +40,7 @@ export async function createUser(
 
 
 
-    const existingUser = await findUserByEmail(
+    const existingUser = await usersRepository.findUserByEmail(
 
         context,
 
@@ -48,17 +50,13 @@ export async function createUser(
 
     if (existingUser) {
 
-        throw new BadRequestError(
-
-            "Email already exists"
-
-        );
+        throw new BadRequestError("Email already exists");
 
     }
 
 
 
-    return createUserRepository(
+    return usersRepository.createUser(
 
         context,
 

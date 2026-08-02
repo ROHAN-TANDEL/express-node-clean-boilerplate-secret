@@ -99,3 +99,17 @@ export async function createUserRepository(
     ]);
 
 }
+
+
+
+export const usersRepository = {
+
+    findAllUsers,
+
+    findUserById,
+
+    findUserByEmail,
+
+    createUser: createUserRepository
+
+};
