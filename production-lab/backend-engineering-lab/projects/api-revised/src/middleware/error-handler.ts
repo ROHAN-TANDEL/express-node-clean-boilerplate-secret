@@ -7,6 +7,7 @@ import type {
     Response
 
 } from "express";
+import {ZodError} from "zod";
 
 export function errorHandler(
 
@@ -20,10 +21,29 @@ export function errorHandler(
 
 ) {
 
-    res.status(500).json({
+
+    if (
+
+        error instanceof ZodError
+
+    ) {
+
+        return res.status(400).json({
+
+            message: "Validation Failed",
+
+            errors: error.issues
+
+        });
+
+    }
+
+    return res.status(500).json({
 
         message: error.message
 
     });
+
+
 
 }
