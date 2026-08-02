@@ -6,27 +6,26 @@ import type { CreateUserInput } from "../validators/user";
 import {BadRequestError} from "../errors/bad-request";
 
 
-export function userService(context: ApplicationContext)
+export function userService(userRepo: ReturnType<typeof usersRepository>)
 {
-    const userRepo = usersRepository(context);
 
-    async function getUsers(context: ApplicationContext)
+    async function getUsers()
     {
         return userRepo.findAllUsers();
     }
 
-    async function getUserById(context: ApplicationContext, id: number)
+    async function getUserById(id: number)
     {
         return userRepo.findUserById(id);
     }
 
-    async function createUser(context: ApplicationContext, input: CreateUserInput)
+    async function createUser(input: CreateUserInput)
     {
         const userExists = await userRepo.findUserByEmail(input.email);
 
         if (userExists) { throw new BadRequestError("Email already exists"); }
 
-        return usersRepository(context).createUser(input);
+        return userRepo.createUser(input);
 
     }
 

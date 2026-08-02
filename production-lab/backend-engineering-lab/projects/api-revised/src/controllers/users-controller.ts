@@ -5,10 +5,8 @@ import type { ApplicationContext } from "../context";
 import { userService } from "../services/users-service";
 
 
-export function userController(context: ApplicationContext)
+export function userController(userServ: ReturnType<typeof userService>)
 {
-    const userServ = userService(context);
-
     async function getUsers(
         req: Request,
         res: Response,
@@ -18,7 +16,7 @@ export function userController(context: ApplicationContext)
 
         try {
 
-            const response = await userServ.getUsers(context);
+            const response = await userServ.getUsers();
 
             res.json(response);
 
@@ -53,7 +51,7 @@ export function userController(context: ApplicationContext)
 
             }
 
-            const user = await userServ.getUserById(context, id);
+            const user = await userServ.getUserById(id);
 
             res.json(user);
 
@@ -72,7 +70,7 @@ export function userController(context: ApplicationContext)
     ) {
         try {
 
-            const user = await userServ.createUser(context, req.body);
+            const user = await userServ.createUser(req.body);
 
             res.status(201).json(user);
 

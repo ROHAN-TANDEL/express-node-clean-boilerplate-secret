@@ -6,6 +6,8 @@ import type { ApplicationContext } from "../context";
 import { userController } from "../controllers/users-controller";
 import {validate} from "../middleware/validate";
 import {createUserSchema} from "../validators/user";
+import {userService} from "../services/users-service";
+import {usersRepository} from "../repositories/users-repository";
 
 export function registerUsers(
 
@@ -15,7 +17,9 @@ export function registerUsers(
 
 ) {
 
-    const userControl = userController(context);
+    const userRepo = usersRepository(context);
+    const userServ = userService(userRepo);
+    const userControl = userController(userServ);
 
     app.get("/users", userControl.getUsers);
 
