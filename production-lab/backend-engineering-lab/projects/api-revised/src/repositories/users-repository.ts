@@ -10,14 +10,14 @@ export function usersRepository(
 
 ) {
 
-    async function findAllUsers(context: ApplicationContext)
+    async function findAllUsers()
     {
         const query = `SELECT user_id, firstname, email FROM users ORDER BY user_id`;
         return rows<User>(context, query);
 
     }
 
-    async function findUserById(context: ApplicationContext, id: number)
+    async function findUserById(id: number)
     {
         const query = ` SELECT user_id, firstname, email 
                         FROM users WHERE user_id = $1 ORDER BY user_id`;
@@ -26,7 +26,7 @@ export function usersRepository(
 
     }
 
-    async function findUserByEmail(context: ApplicationContext, email: string)
+    async function findUserByEmail(email: string)
     {
         const query = `SELECT user_id, firstname, email FROM users WHERE email = $1`;
 
@@ -35,7 +35,7 @@ export function usersRepository(
     }
 
 
-    async function createUser(context: ApplicationContext, input: CreateUserInput)
+    async function createUser(input: CreateUserInput)
     {
 
         const query = `INSERT INTO users 
