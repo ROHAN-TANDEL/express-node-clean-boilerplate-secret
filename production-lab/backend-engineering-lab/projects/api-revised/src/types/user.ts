@@ -7,3 +7,12 @@ export interface User {
     email: string;
 
 }
+
+
+export interface CreateUserInput {
+
+    firstname: string;
+
+    email: string;
+
+}
