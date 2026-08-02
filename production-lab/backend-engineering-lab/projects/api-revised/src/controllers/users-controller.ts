@@ -2,15 +2,12 @@ import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
-import {
-        getUsers as getUsersServ,
-        getUserById as getUserByIdServ,
-        createUser as createUserServ,
-        } from "../services/users-service";
+import { userService } from "../services/users-service";
 
 
 export function userController(context: ApplicationContext)
 {
+    const userServ = userService(context);
 
     async function getUsers(
         req: Request,
@@ -21,7 +18,7 @@ export function userController(context: ApplicationContext)
 
         try {
 
-            const response = await getUsersServ(context);
+            const response = await userServ.getUsers(context);
 
             res.json(response);
 
@@ -56,7 +53,7 @@ export function userController(context: ApplicationContext)
 
             }
 
-            const user = await getUserByIdServ(context, id);
+            const user = await userServ.getUserById(context, id);
 
             res.json(user);
 
@@ -75,7 +72,7 @@ export function userController(context: ApplicationContext)
     ) {
         try {
 
-            const user = await createUserServ(context, req.body);
+            const user = await userServ.createUser(context, req.body);
 
             res.status(201).json(user);
 
@@ -89,11 +86,11 @@ export function userController(context: ApplicationContext)
 
     return {
 
-        getUsers: getUsers,
+        getUsers,
 
-        getUserById: getUserById,
+        getUserById,
 
-        createUser: createUser
+        createUser
 
     };
 

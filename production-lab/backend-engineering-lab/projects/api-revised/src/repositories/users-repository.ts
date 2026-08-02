@@ -4,171 +4,48 @@ import type { User } from "../types/user";
 import type { CreateUserInput } from "../validators/user";
 
 
-export async function findAllUsers(
-    context: ApplicationContext
-) {
-
-    return rows<User>(
-        context,
-        `
-    SELECT
-        user_id,
-        firstname,
-        email
-    FROM users
-    ORDER BY user_id
-    `
-    );
-
-}
-
-
-export async function findUserById(
-    context: ApplicationContext,
-    id: number
-) {
-    console.log("query working");
-    return row(
-        context,
-        `
-    SELECT
-        user_id,
-        firstname,
-        email
-    FROM users
-    WHERE user_id = $1
-    ORDER BY user_id
-    `, [id]
-    );
-
-}
-
-
-export async function findUserByEmail(
-
-    context: ApplicationContext,
-
-    email: string
-
-) {
-
-    return row<User>(context,
-        `
-        SELECT
-            user_id,
-            firstname,
-            email
-        FROM users
-        WHERE email = $1
-
-    `, [email]);
-
-}
-
-
-
-export async function createUserRepository(
-
-    context: ApplicationContext,
-
-    input: CreateUserInput
-
-) {
-
-    return row<User>(context,
-        `
-        INSERT INTO users ( 
-            username, firstname,
-            email, password
-
-        )
-
-        VALUES ( $1, $2, $3, $4 )
-
-        RETURNING user_id, firstname, email
-
-    `, [
-
-        input.email,
-
-        input.firstname,
-
-        input.email,
-
-        input.email
-
-    ]);
-
-}
-
-
-
-
-
-
-
 export function usersRepository(
 
     context: ApplicationContext
 
 ) {
 
-    return {
+    async function findAllUsers(context: ApplicationContext)
+    {
+        const query = `SELECT user_id, firstname, email FROM users ORDER BY user_id`;
+        return rows<User>(context, query);
 
-        findAllUsers() {
+    }
 
-            return findAllUsers(
+    async function findUserById(context: ApplicationContext, id: number)
+    {
+        const query = ` SELECT user_id, firstname, email 
+                        FROM users WHERE user_id = $1 ORDER BY user_id`;
 
-                context
+        return row(context, query, [id]);
 
-            );
+    }
 
-        },
+    async function findUserByEmail(context: ApplicationContext, email: string)
+    {
+        const query = `SELECT user_id, firstname, email FROM users WHERE email = $1`;
 
-        findUserById(
+        return row<User>(context, query, [email]);
 
-            id: number
+    }
 
-        ) {
 
-            return findUserById(
-                context,
-                id
-            );
+    async function createUser(context: ApplicationContext, input: CreateUserInput)
+    {
 
-        },
+        const query = `INSERT INTO users 
+                        (username, firstname, email, password ) 
+                        VALUES ( $1, $2, $3, $4 ) 
+                        RETURNING user_id, firstname, email`;
 
-        findUserByEmail(
+        const inputs =[ input.email, input.firstname, input.email, input.email ];
 
-            email: string
+        return row<User>(context, query, inputs);
 
-        ) {
-
-            return findUserByEmail(
-
-                context,
-
-                email
-
-            );
-
-        },
-
-        createUser(
-            input: CreateUserInput
-
-        ) {
-
-            return createUserRepository(
-
-                context,
-
-                input
-
-            );
-
-        }
-
-    };
-
+    }
 }
