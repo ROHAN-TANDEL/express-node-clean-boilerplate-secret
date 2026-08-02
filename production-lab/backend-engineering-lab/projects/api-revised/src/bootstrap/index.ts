@@ -3,18 +3,19 @@ import {createLogger} from "../logger";
 import config from "../config";
 
 import { createApp } from "../app";
-import type { ApplicationContext } from "../context";
+import {ApplicationContext, createContext} from "../context";
 
-import { database } from "../database";
+import {createDatabase} from "../database";
 import {checkDatabaseHealth} from "../database/health";
 
 
 export async function bootstrap() {
 
     const logger = createLogger(config);
-
+    let database;
     try {
 
+        database = createDatabase();
         await database.connect();
         await checkDatabaseHealth();
     }
@@ -27,7 +28,7 @@ export async function bootstrap() {
 
     }
 
-    const context: ApplicationContext = {
+    const context: ApplicationContext = createContext(
 
         logger,
 
@@ -35,7 +36,7 @@ export async function bootstrap() {
 
         database
 
-    };
+    );
 
     const app = createApp(context);
 

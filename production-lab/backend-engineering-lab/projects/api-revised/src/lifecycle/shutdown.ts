@@ -39,7 +39,7 @@ async function shutdown(
 
         async () => {
 
-            await disconnectDatabase();
+            await disconnectDatabase(context.database);
 
             context.logger.info(
 
