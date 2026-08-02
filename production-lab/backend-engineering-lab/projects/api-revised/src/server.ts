@@ -24,11 +24,39 @@ async function start(): Promise<void> {
 
         } = await bootstrap();
 
-        app.listen(config.port, () => {
+        const server = app.listen(config.port, () => {
 
             logger.info("Server Started");
 
         });
+
+
+        process.on(
+
+            "SIGINT",
+
+            () => {
+
+                // server.close is needed as It stops accepting new requests.
+                // It waits for active requests to finish.
+                // Then it calls the callback.
+                server.close(
+
+                    () => {
+
+                        logger.info(
+
+                            "HTTP Server Closed"
+
+                        );
+
+                    }
+
+                );
+
+            }
+
+        );
 
     }
 
