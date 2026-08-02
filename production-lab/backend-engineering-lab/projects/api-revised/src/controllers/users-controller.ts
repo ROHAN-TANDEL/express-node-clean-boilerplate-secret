@@ -88,18 +88,12 @@ export function createCreateUserController(
 
 
         try {
-            const input = createUserSchema.parse(
-
-                req.body
-
-            );
-
 
             const user = await createUser(
 
                 context,
 
-                input
+                req.body
 
             );
 
