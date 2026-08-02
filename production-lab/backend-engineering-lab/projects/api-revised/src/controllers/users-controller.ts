@@ -2,114 +2,107 @@ import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
-import {getUsers, getUserById, createUser, createUsersService} from "../services/users-service";
+import {
+        getUsers as getUsersServ,
+        getUserById as getUserByIdServ,
+        createUser as createUserServ,
+        } from "../services/users-service";
 
-import {createUserSchema} from "../validators/user";
 
-export function usersController(
+export function userController(context: ApplicationContext)
+{
 
-    context: ApplicationContext
+    function getUsers() {
+        return async function (
+            req: Request,
+            res: Response,
+            next: NextFunction
 
-) {
+        ) {
 
-    return async function (
+            try {
 
-        req: Request,
+                const response = await getUsersServ(context);
 
-        res: Response,
+                res.json(response);
 
-        next: NextFunction
-
-    ) {
-
-        try {
-
-            const service = createUsersService(
-                context
-            );
-
-            const response = await service.getUsers();
-            res.json(response);
-        } catch (error) {
-            next(error);
+            } catch (error) {
+                next(error);
+            }
         }
     }
-}
 
 
-export function createUserByIdController(
-    context: ApplicationContext
-) {
-
-    return async function (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
 
 
-        try {
+    function getUserById() {
+        return async function (
+            req: Request,
+            res: Response,
+            next: NextFunction
+        ) {
 
-            const id = Number(
-                req.params.id
-            );
 
-            if (Number.isNaN(id)) {
+            try {
 
-                return res.status(400).json({
+                const id = Number(
+                    req.params.id
+                );
 
-                    message: "Invalid user id"
+                if (Number.isNaN(id)) {
 
-                });
+                    return res.status(400).json({
 
+                        message: "Invalid user id"
+
+                    });
+
+                }
+
+                const user = await getUserByIdServ(context, id);
+
+                res.json(user);
+
+            }  catch (error) {
+                next(error);
             }
 
-            const user = await getUserById(
-                context,
-                id
-            );
 
-            res.json(user);
-        }  catch (error) {
-            next(error);
-        }
-
-
-    };
-
-}
-
-
-export function createCreateUserController(
-    context: ApplicationContext
-) {
-
-    return async function (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
+        };
+    }
 
 
 
-        try {
 
-            const user = await createUser(
+    function createUser() {
+        return async function (
+            req: Request,
+            res: Response,
+            next: NextFunction
+        ) {
 
-                context,
+            try {
 
-                req.body
+                const user = await createUserServ(context, req.body);
 
-            );
+                res.status(201).json(user);
 
-            res.status(201).json(
+            } catch (error) {
 
-                user
+                next(error);
 
-            );
-        } catch (error) {
-            next(error);
-        }
+            }
+        };
+    }
+
+
+    return {
+
+        getUsers: getUsers(),
+
+        getUserById: getUserById(),
+
+        createUser: createUser()
 
     };
 
