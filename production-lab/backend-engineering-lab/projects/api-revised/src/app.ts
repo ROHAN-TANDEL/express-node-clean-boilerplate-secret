@@ -2,12 +2,15 @@ import express from "express";
 import { registerUsers } from "./routes/users";
 import { registerHealth } from "./routes/health";
 import {registerTime} from "./routes/time";
+import {errorHandler} from "./middleware/error-handler";
 
 export function createApp(context:any) {
 
     const app = express();
 
     app.use(express.json());
+
+    app.use(errorHandler);
 
     registerHealth(app, context);
 
@@ -28,7 +31,6 @@ export function createApp(context:any) {
         res.send({message:"pong"});
 
     });
-
 
     registerTime(app, context);
 

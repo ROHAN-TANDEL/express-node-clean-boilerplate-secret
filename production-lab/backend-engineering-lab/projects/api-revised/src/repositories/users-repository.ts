@@ -1,6 +1,6 @@
 import type { ApplicationContext } from "../context";
 import { rows, row } from "../database/query";
-import type { User } from "../entities/user";
+import type { User } from "../types/user";
 import type { CreateUserInput } from "../validators/user";
 
 
@@ -41,6 +41,29 @@ export async function findUserById(
     );
 
 }
+
+
+export async function findUserByEmail(
+
+    context: ApplicationContext,
+
+    email: string
+
+) {
+
+    return row<User>(`
+
+        SELECT
+            user_id,
+            firstname,
+            email
+        FROM users
+        WHERE email = $1
+
+    `, [email]);
+
+}
+
 
 
 export async function createUserRepository(
