@@ -48,4 +48,11 @@ export function usersRepository(
         return row<User>(context, query, inputs);
 
     }
+
+    return {
+        findAllUsers,
+        findUserByEmail,
+        findUserById,
+        createUser
+    }
 }
