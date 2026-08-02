@@ -3,12 +3,18 @@ import { registerUsers } from "./routes/users";
 import { registerHealth } from "./routes/health";
 import {registerTime} from "./routes/time";
 import {errorHandler} from "./middleware/error-handler";
+import {requestId} from "./middleware/request-id";
+import {createRequestLogger} from "./middleware/request-logger";
 
 export function createApp(context:any) {
 
     const app = express();
 
     app.use(express.json());
+
+    app.use(requestId);
+
+    app.use(createRequestLogger(context));
 
     app.use(errorHandler);
 
