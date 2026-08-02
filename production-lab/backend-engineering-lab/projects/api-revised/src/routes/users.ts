@@ -2,6 +2,8 @@ import type { Express } from "express";
 import type { ApplicationContext } from "../context";
 
 import {createUserByIdController, usersController, createCreateUserController} from "../controllers/users-controller";
+import {validate} from "../middleware/validate";
+import {createUserSchema} from "../validators/user";
 
 export function registerUsers(
     app: Express,
@@ -27,6 +29,7 @@ export function registerUsers(
 
     app.post(
         "/users",
+        validate(createUserSchema),
         createCreateUserController(
             context
         )

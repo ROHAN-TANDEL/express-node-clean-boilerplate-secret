@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
@@ -16,12 +16,18 @@ export function usersController(
 
         req: Request,
 
-        res: Response
+        res: Response,
+
+        next: NextFunction
 
     ) {
 
-        const response = await getUsers(context);
-        res.json(response);
+        try {
+            const response = await getUsers(context);
+            res.json(response);
+        } catch (error) {
+            next(error);
+        }
     }
 }
 
@@ -32,29 +38,37 @@ export function createUserByIdController(
 
     return async function (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) {
 
-        const id = Number(
-            req.params.id
-        );
 
-        if (Number.isNaN(id)) {
+        try {
 
-            return res.status(400).json({
+            const id = Number(
+                req.params.id
+            );
 
-                message: "Invalid user id"
+            if (Number.isNaN(id)) {
 
-            });
+                return res.status(400).json({
 
+                    message: "Invalid user id"
+
+                });
+
+            }
+
+            const user = await getUserById(
+                context,
+                id
+            );
+
+            res.json(user);
+        }  catch (error) {
+            next(error);
         }
 
-        const user = await getUserById(
-            context,
-            id
-        );
-
-        res.json(user);
 
     };
 
@@ -67,30 +81,30 @@ export function createCreateUserController(
 
     return async function (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) {
 
-        const input = createUserSchema.parse(
-
-            req.body
-
-        );
 
 
-        const user = await createUser(
+        try {
 
-            context,
+            const user = await createUser(
 
-            input
+                context,
 
-        );
+                req.body
 
-        res.status(201).json(
+            );
 
-            user
+            res.status(201).json(
 
-        );
+                user
 
+            );
+        } catch (error) {
+            next(error);
+        }
 
     };
 

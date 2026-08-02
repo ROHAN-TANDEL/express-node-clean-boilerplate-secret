@@ -42,7 +42,7 @@ export async function row<T>(
 
     values: unknown[] = []
 
-): Promise<T | undefined> {
+): Promise<T | T[] | undefined> {
 
     const result = await rows<T>(
 
@@ -52,6 +52,6 @@ export async function row<T>(
 
     );
 
-    return result[0];
+    return result[0] ?? result;
 
 }
