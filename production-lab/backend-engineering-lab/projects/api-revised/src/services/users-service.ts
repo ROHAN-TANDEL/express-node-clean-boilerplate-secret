@@ -59,3 +59,57 @@ export async function createUser(
     );
 
 }
+
+
+
+
+
+
+
+export function createUsersService(
+    context: ApplicationContext
+) {
+
+    return {
+
+        async getUsers() {
+
+            const repository = usersRepository(
+                context
+            );
+
+            return repository.findAllUsers();
+
+        },
+
+        async getUserById(
+            id: number
+        ) {
+
+            const repository = usersRepository(
+                context
+            );
+
+            return repository.findUserById(
+                id
+            );
+
+        },
+
+        async createUser(
+            input: CreateUserInput
+        ) {
+
+            const repository = usersRepository(
+                context
+            );
+
+            return repository.createUser(
+                input
+            );
+
+        }
+
+    };
+
+}
