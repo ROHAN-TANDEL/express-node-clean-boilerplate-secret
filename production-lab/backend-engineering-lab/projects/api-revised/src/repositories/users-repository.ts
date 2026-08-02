@@ -9,6 +9,7 @@ export async function findAllUsers(
 ) {
 
     return rows<User>(
+        context,
         `
     SELECT
         user_id,
@@ -23,12 +24,12 @@ export async function findAllUsers(
 
 
 export async function findUserById(
-
+    context: ApplicationContext,
     id: number
-
 ) {
-
+    console.log("query working");
     return row(
+        context,
         `
     SELECT
         user_id,
@@ -51,8 +52,8 @@ export async function findUserByEmail(
 
 ) {
 
-    return row<User>(`
-
+    return row<User>(context,
+        `
         SELECT
             user_id,
             firstname,
@@ -74,8 +75,8 @@ export async function createUserRepository(
 
 ) {
 
-    return row<User>(`
-
+    return row<User>(context,
+        `
         INSERT INTO users ( 
             username, firstname,
             email, password
@@ -97,5 +98,77 @@ export async function createUserRepository(
         input.email
 
     ]);
+
+}
+
+
+
+
+
+
+
+export function usersRepository(
+
+    context: ApplicationContext
+
+) {
+
+    return {
+
+        findAllUsers() {
+
+            return findAllUsers(
+
+                context
+
+            );
+
+        },
+
+        findUserById(
+
+            id: number
+
+        ) {
+
+            return findUserById(
+                context,
+                id
+            );
+
+        },
+
+        findUserByEmail(
+
+            email: string
+
+        ) {
+
+            return findUserByEmail(
+
+                context,
+
+                email
+
+            );
+
+        },
+
+        createUser(
+            input: CreateUserInput
+
+        ) {
+
+            return createUserRepository(
+
+                context,
+
+                input
+
+            );
+
+        }
+
+    };
 
 }

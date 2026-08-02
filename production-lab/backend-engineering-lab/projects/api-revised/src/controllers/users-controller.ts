@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
-import { getUsers, getUserById, createUser } from "../services/users-service";
+import {getUsers, getUserById, createUser, createUsersService} from "../services/users-service";
 
 import {createUserSchema} from "../validators/user";
 
@@ -23,7 +23,12 @@ export function usersController(
     ) {
 
         try {
-            const response = await getUsers(context);
+
+            const service = createUsersService(
+                context
+            );
+
+            const response = await service.getUsers();
             res.json(response);
         } catch (error) {
             next(error);

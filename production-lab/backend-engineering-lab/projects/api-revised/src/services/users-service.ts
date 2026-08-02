@@ -1,5 +1,7 @@
 import type { ApplicationContext } from "../context";
-import {findAllUsers, findUserById, createUserRepository, findUserByEmail } from "../repositories/users-repository";
+
+import { usersRepository as usersRepository } from "../repositories/users-repository";
+
 import type { CreateUserInput } from "../validators/user";
 import {BadRequestError} from "../errors/bad-request";
 
@@ -8,9 +10,7 @@ export async function getUsers(
     context: ApplicationContext
 ) {
 
-    return findAllUsers(
-        context
-    );
+    return usersRepository(context).findAllUsers();
 
 }
 
@@ -20,7 +20,7 @@ export async function getUserById(
     id: number
 ) {
 
-    return findUserById(
+    return usersRepository(context).findUserById(
         id
     );
 
@@ -38,9 +38,7 @@ export async function createUser(
 
 
 
-    const existingUser = await findUserByEmail(
-
-        context,
+    const existingUser = await usersRepository(context).findUserByEmail(
 
         input.email
 
@@ -48,22 +46,70 @@ export async function createUser(
 
     if (existingUser) {
 
-        throw new BadRequestError(
-
-            "Email already exists"
-
-        );
+        throw new BadRequestError("Email already exists");
 
     }
 
 
 
-    return createUserRepository(
-
-        context,
+    return usersRepository(context).createUser(
 
         input
 
     );
+
+}
+
+
+
+
+
+
+
+export function createUsersService(
+    context: ApplicationContext
+) {
+
+    return {
+
+        async getUsers() {
+
+            const repository = usersRepository(
+                context
+            );
+
+            return repository.findAllUsers();
+
+        },
+
+        async getUserById(
+            id: number
+        ) {
+
+            const repository = usersRepository(
+                context
+            );
+
+            return repository.findUserById(
+                id
+            );
+
+        },
+
+        async createUser(
+            input: CreateUserInput
+        ) {
+
+            const repository = usersRepository(
+                context
+            );
+
+            return repository.createUser(
+                input
+            );
+
+        }
+
+    };
 
 }
