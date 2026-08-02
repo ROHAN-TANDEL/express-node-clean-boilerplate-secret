@@ -23,9 +23,7 @@ export async function findAllUsers(
 
 
 export async function findUserById(
-
     id: number
-
 ) {
 
     return row(
@@ -102,14 +100,72 @@ export async function createUserRepository(
 
 
 
-export const usersRepository = {
 
-    findAllUsers,
 
-    findUserById,
 
-    findUserByEmail,
 
-    createUser: createUserRepository
+export function usersRepository(
 
-};
+    context: ApplicationContext
+
+) {
+
+    return {
+
+        findAllUsers() {
+
+            return findAllUsers(
+
+                context
+
+            );
+
+        },
+
+        findUserById(
+
+            id: number
+
+        ) {
+
+            return findUserById(
+                id
+
+            );
+
+        },
+
+        findUserByEmail(
+
+            email: string
+
+        ) {
+
+            return findUserByEmail(
+
+                context,
+
+                email
+
+            );
+
+        },
+
+        createUser(
+            input: CreateUserInput
+
+        ) {
+
+            return createUserRepository(
+
+                context,
+
+                input
+
+            );
+
+        }
+
+    };
+
+}

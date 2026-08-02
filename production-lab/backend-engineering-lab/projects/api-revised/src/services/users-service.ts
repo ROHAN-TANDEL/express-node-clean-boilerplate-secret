@@ -1,6 +1,6 @@
 import type { ApplicationContext } from "../context";
 
-import { usersRepository } from "../repositories/users-repository";
+import { usersRepository as usersRepository } from "../repositories/users-repository";
 
 import type { CreateUserInput } from "../validators/user";
 import {BadRequestError} from "../errors/bad-request";
@@ -10,9 +10,7 @@ export async function getUsers(
     context: ApplicationContext
 ) {
 
-    return usersRepository.findAllUsers(
-        context
-    );
+    return usersRepository(context).findAllUsers();
 
 }
 
@@ -22,7 +20,7 @@ export async function getUserById(
     id: number
 ) {
 
-    return usersRepository.findUserById(
+    return usersRepository(context).findUserById(
         id
     );
 
@@ -40,9 +38,7 @@ export async function createUser(
 
 
 
-    const existingUser = await usersRepository.findUserByEmail(
-
-        context,
+    const existingUser = await usersRepository(context).findUserByEmail(
 
         input.email
 
@@ -56,9 +52,7 @@ export async function createUser(
 
 
 
-    return usersRepository.createUser(
-
-        context,
+    return usersRepository(context).createUser(
 
         input
 
