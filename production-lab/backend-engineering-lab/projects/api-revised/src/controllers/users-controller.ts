@@ -12,97 +12,88 @@ import {
 export function userController(context: ApplicationContext)
 {
 
-    function getUsers() {
-        return async function (
-            req: Request,
-            res: Response,
-            next: NextFunction
+    async function getUsers(
+        req: Request,
+        res: Response,
+        next: NextFunction
 
-        ) {
+    ) {
 
-            try {
+        try {
 
-                const response = await getUsersServ(context);
+            const response = await getUsersServ(context);
 
-                res.json(response);
+            res.json(response);
 
-            } catch (error) {
-                next(error);
-            }
+        } catch (error) {
+            next(error);
         }
     }
 
 
 
 
-    function getUserById() {
-        return async function (
-            req: Request,
-            res: Response,
-            next: NextFunction
-        ) {
+    async function getUserById(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) {
 
 
-            try {
+        try {
 
-                const id = Number(
-                    req.params.id
-                );
+            const id = Number(
+                req.params.id
+            );
 
-                if (Number.isNaN(id)) {
+            if (Number.isNaN(id)) {
 
-                    return res.status(400).json({
+                return res.status(400).json({
 
-                        message: "Invalid user id"
+                    message: "Invalid user id"
 
-                    });
+                });
 
-                }
-
-                const user = await getUserByIdServ(context, id);
-
-                res.json(user);
-
-            }  catch (error) {
-                next(error);
             }
 
+            const user = await getUserByIdServ(context, id);
 
-        };
+            res.json(user);
+
+        }  catch (error) {
+
+            next(error);
+
+        }
     }
 
 
+    async function createUser(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) {
+        try {
 
+            const user = await createUserServ(context, req.body);
 
-    function createUser() {
-        return async function (
-            req: Request,
-            res: Response,
-            next: NextFunction
-        ) {
+            res.status(201).json(user);
 
-            try {
+        } catch (error) {
 
-                const user = await createUserServ(context, req.body);
+            next(error);
 
-                res.status(201).json(user);
-
-            } catch (error) {
-
-                next(error);
-
-            }
-        };
+        }
     }
 
 
     return {
 
-        getUsers: getUsers(),
+        getUsers: getUsers,
 
-        getUserById: getUserById(),
+        getUserById: getUserById,
 
-        createUser: createUser()
+        createUser: createUser
 
     };
 
