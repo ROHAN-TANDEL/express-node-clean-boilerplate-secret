@@ -30,7 +30,7 @@ export function errorHandler(
 
         return res.status(400).json({
 
-            message: "Validation Failed",
+            message: error.message,
 
             errors: error.issues
 

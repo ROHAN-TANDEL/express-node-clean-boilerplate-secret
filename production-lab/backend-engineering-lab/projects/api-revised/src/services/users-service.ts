@@ -1,6 +1,7 @@
 import type { ApplicationContext } from "../context";
 import {findAllUsers, findUserById, createUserRepository, findUserByEmail } from "../repositories/users-repository";
 import type { CreateUserInput } from "../validators/user";
+import {BadRequestError} from "../errors/bad-request";
 
 
 export async function getUsers(
@@ -47,7 +48,7 @@ export async function createUser(
 
     if (existingUser) {
 
-        throw new Error(
+        throw new BadRequestError(
 
             "Email already exists"
 
