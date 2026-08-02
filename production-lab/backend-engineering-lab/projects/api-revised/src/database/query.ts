@@ -1,12 +1,13 @@
 import { QueryResult } from "pg";
-import { database } from "./index";
+import {ApplicationContext} from "../context";
 
 export async function query(
+    context: ApplicationContext,
     sql: string,
     values: unknown[] = []
 ): Promise<QueryResult> {
 
-    return database.query(
+    return context.database.query(
         sql,
         values
     );
@@ -16,6 +17,8 @@ export async function query(
 
 export async function rows<T>(
 
+    context: ApplicationContext,
+
     sql: string,
 
     values: unknown[] = []
@@ -23,6 +26,7 @@ export async function rows<T>(
 ): Promise<T[]> {
 
     const result = await query(
+        context,
 
         sql,
 
@@ -37,14 +41,17 @@ export async function rows<T>(
 
 
 export async function row<T>(
+    context: ApplicationContext,
 
     sql: string,
 
     values: unknown[] = []
 
-): Promise<T | undefined> {
+): Promise<T | T[] | undefined> {
 
     const result = await rows<T>(
+
+        context,
 
         sql,
 
@@ -52,6 +59,7 @@ export async function row<T>(
 
     );
 
-    return result[0];
+
+    return result[0] ?? result;
 
 }

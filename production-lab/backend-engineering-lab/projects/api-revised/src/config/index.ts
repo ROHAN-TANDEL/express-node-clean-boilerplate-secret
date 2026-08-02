@@ -1,6 +1,7 @@
 import { env } from "./env";
+import type { AppConfig } from "./types";
 
-const config = {
+const config: AppConfig = {
 
     port: Number( env.PORT ?? 3000),
     logger: {

@@ -1,78 +1,58 @@
 import type { ApplicationContext } from "../context";
 import { rows, row } from "../database/query";
-import type { User } from "../entities/user";
+import type { User } from "../types/user";
 import type { CreateUserInput } from "../validators/user";
 
 
-export async function findAllUsers(
+export function usersRepository(
+
     context: ApplicationContext
-) {
-
-    return rows<User>(
-        `
-    SELECT
-        user_id,
-        firstname,
-        email
-    FROM users
-    ORDER BY user_id
-    `
-    );
-
-}
-
-
-export async function findUserById(
-
-    id: number
 
 ) {
 
-    return row(
-        `
-    SELECT
-        user_id,
-        firstname,
-        email
-    FROM users
-    WHERE user_id = $1
-    ORDER BY user_id
-    `, [id]
-    );
+    async function findAllUsers()
+    {
+        const query = `SELECT user_id, firstname, email FROM users ORDER BY user_id`;
+        return rows<User>(context, query);
 
-}
+    }
+
+    async function findUserById(id: number)
+    {
+        const query = ` SELECT user_id, firstname, email 
+                        FROM users WHERE user_id = $1 ORDER BY user_id`;
+
+        return row(context, query, [id]);
+
+    }
+
+    async function findUserByEmail(email: string)
+    {
+        const query = `SELECT user_id, firstname, email FROM users WHERE email = $1`;
+
+        return row<User>(context, query, [email]);
+
+    }
 
 
-export async function createUserRepository(
+    async function createUser(input: CreateUserInput)
+    {
 
-    context: ApplicationContext,
+        const query = `INSERT INTO users 
+                        (username, firstname, email, password ) 
+                        VALUES ( $1, $2, $3, $4 ) 
+                        RETURNING user_id, firstname, email`;
 
-    input: CreateUserInput
+        const inputs =[ input.email, input.firstname, input.email, input.email ];
 
-) {
+        return row<User>(context, query, inputs);
 
-    return row<User>(`
+    }
 
-        INSERT INTO users ( 
-            username, firstname,
-            email, password
-
-        )
-
-        VALUES ( $1, $2, $3, $4 )
-
-        RETURNING user_id, firstname, email
-
-    `, [
-
-        input.email,
-
-        input.firstname,
-
-        input.email,
-
-        input.email
-
-    ]);
-
+    return {
+        findAllUsers,
+        findUserByEmail,
+        findUserById,
+        createUser
+    }
 }

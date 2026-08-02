@@ -1,45 +1,41 @@
 import type { ApplicationContext } from "../context";
-import {findAllUsers, findUserById, createUserRepository } from "../repositories/users-repository";
+
+import { usersRepository as usersRepository } from "../repositories/users-repository";
+
 import type { CreateUserInput } from "../validators/user";
+import {BadRequestError} from "../errors/bad-request";
 
 
-export async function getUsers(
-    context: ApplicationContext
-) {
+export function userService(userRepo: ReturnType<typeof usersRepository>)
+{
 
-    return findAllUsers(
-        context
-    );
+    async function getUsers()
+    {
+        return userRepo.findAllUsers();
+    }
 
-}
+    async function getUserById(id: number)
+    {
+        return userRepo.findUserById(id);
+    }
+
+    async function createUser(input: CreateUserInput)
+    {
+        const userExists = await userRepo.findUserByEmail(input.email);
+
+        if (userExists) { throw new BadRequestError("Email already exists"); }
+
+        return userRepo.createUser(input);
+
+    }
 
 
-export async function getUserById(
-    context: ApplicationContext,
-    id: number
-) {
+    return {
 
-    return findUserById(
-        id
-    );
+        getUsers,
 
-}
+        getUserById,
 
-
-export async function createUser(
-
-    context: ApplicationContext,
-
-    input: CreateUserInput
-
-) {
-
-    return createUserRepository(
-
-        context,
-
-        input
-
-    );
-
+        createUser
+    }
 }
