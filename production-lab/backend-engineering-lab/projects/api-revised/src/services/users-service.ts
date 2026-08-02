@@ -6,110 +6,36 @@ import type { CreateUserInput } from "../validators/user";
 import {BadRequestError} from "../errors/bad-request";
 
 
-export async function getUsers(
-    context: ApplicationContext
-) {
+export function userService(userRepo: ReturnType<typeof usersRepository>)
+{
 
-    return usersRepository(context).findAllUsers();
+    async function getUsers()
+    {
+        return userRepo.findAllUsers();
+    }
 
-}
+    async function getUserById(id: number)
+    {
+        return userRepo.findUserById(id);
+    }
 
+    async function createUser(input: CreateUserInput)
+    {
+        const userExists = await userRepo.findUserByEmail(input.email);
 
-export async function getUserById(
-    context: ApplicationContext,
-    id: number
-) {
+        if (userExists) { throw new BadRequestError("Email already exists"); }
 
-    return usersRepository(context).findUserById(
-        id
-    );
-
-}
-
-
-export async function createUser(
-
-    context: ApplicationContext,
-
-    input: CreateUserInput
-
-) {
-
-
-
-
-    const existingUser = await usersRepository(context).findUserByEmail(
-
-        input.email
-
-    );
-
-    if (existingUser) {
-
-        throw new BadRequestError("Email already exists");
+        return userRepo.createUser(input);
 
     }
 
 
-
-    return usersRepository(context).createUser(
-
-        input
-
-    );
-
-}
-
-
-
-
-
-
-
-export function createUsersService(
-    context: ApplicationContext
-) {
-
     return {
 
-        async getUsers() {
+        getUsers,
 
-            const repository = usersRepository(
-                context
-            );
+        getUserById,
 
-            return repository.findAllUsers();
-
-        },
-
-        async getUserById(
-            id: number
-        ) {
-
-            const repository = usersRepository(
-                context
-            );
-
-            return repository.findUserById(
-                id
-            );
-
-        },
-
-        async createUser(
-            input: CreateUserInput
-        ) {
-
-            const repository = usersRepository(
-                context
-            );
-
-            return repository.createUser(
-                input
-            );
-
-        }
-
-    };
-
+        createUser
+    }
 }

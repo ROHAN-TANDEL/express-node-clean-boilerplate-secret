@@ -2,46 +2,33 @@ import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
-import {getUsers, getUserById, createUser, createUsersService} from "../services/users-service";
+import { userService } from "../services/users-service";
 
-import {createUserSchema} from "../validators/user";
 
-export function usersController(
-
-    context: ApplicationContext
-
-) {
-
-    return async function (
-
+export function userController(userServ: ReturnType<typeof userService>)
+{
+    async function getUsers(
         req: Request,
-
         res: Response,
-
         next: NextFunction
 
     ) {
 
         try {
 
-            const service = createUsersService(
-                context
-            );
+            const response = await userServ.getUsers();
 
-            const response = await service.getUsers();
             res.json(response);
+
         } catch (error) {
             next(error);
         }
     }
-}
 
 
-export function createUserByIdController(
-    context: ApplicationContext
-) {
 
-    return async function (
+
+    async function getUserById(
         req: Request,
         res: Response,
         next: NextFunction
@@ -64,52 +51,44 @@ export function createUserByIdController(
 
             }
 
-            const user = await getUserById(
-                context,
-                id
-            );
+            const user = await userServ.getUserById(id);
 
             res.json(user);
+
         }  catch (error) {
+
             next(error);
+
         }
+    }
 
 
-    };
-
-}
-
-
-export function createCreateUserController(
-    context: ApplicationContext
-) {
-
-    return async function (
+    async function createUser(
         req: Request,
         res: Response,
         next: NextFunction
     ) {
-
-
-
         try {
 
-            const user = await createUser(
+            const user = await userServ.createUser(req.body);
 
-                context,
+            res.status(201).json(user);
 
-                req.body
-
-            );
-
-            res.status(201).json(
-
-                user
-
-            );
         } catch (error) {
+
             next(error);
+
         }
+    }
+
+
+    return {
+
+        getUsers,
+
+        getUserById,
+
+        createUser
 
     };
 
