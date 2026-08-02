@@ -30,21 +30,41 @@ export function createRequestLogger(
 
     ) {
 
-        context.logger.info({
+        const startedAt = Date.now();
 
-            requestId:
+        res.on(
 
-            res.locals.requestId,
+            "finish",
 
-            method:
+            () => {
 
-            req.method,
+                context.logger.info({
 
-            path:
+                    requestId:
 
-            req.originalUrl
+                    res.locals.requestId,
 
-        });
+                    method:
+
+                    req.method,
+
+                    path:
+
+                    req.originalUrl,
+
+                    status:
+
+                    res.statusCode,
+
+                    duration:
+
+                        Date.now() - startedAt + "ms"
+
+                });
+
+            }
+
+        );
 
         next();
 
