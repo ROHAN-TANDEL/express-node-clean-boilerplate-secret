@@ -39,7 +39,7 @@ export async function bootstrap() {
 
     const app = createApp(context);
 
-    return {app, config, logger};
+    return {app, context};
 
 
 }

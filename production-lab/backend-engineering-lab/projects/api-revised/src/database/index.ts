@@ -9,3 +9,10 @@ export const database = new Pool({
     database: "postgres"
 
 });
+
+
+export async function disconnectDatabase() {
+
+    await database.end();
+
+}

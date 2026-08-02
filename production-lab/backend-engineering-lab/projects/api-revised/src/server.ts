@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { createLogger } from "./logger";
 // import config from "./config";
 import {bootstrap} from "./bootstrap";
+import {disconnectDatabase} from "./database";
+import {registerShutdown} from "./lifecycle/shutdown";
 
 // const logger = createLogger(config);
 
@@ -14,49 +16,16 @@ async function start(): Promise<void> {
 
     try {
 
-        const {
+        const {app, context} = await bootstrap();
 
-            app,
+        const server = app.listen(context.config.port, () => {
 
-            config,
-
-            logger
-
-        } = await bootstrap();
-
-        const server = app.listen(config.port, () => {
-
-            logger.info("Server Started");
+            context.logger.info("Server Started");
 
         });
 
 
-        process.on(
-
-            "SIGINT",
-
-            () => {
-
-                // server.close is needed as It stops accepting new requests.
-                // It waits for active requests to finish.
-                // Then it calls the callback.
-                server.close(
-
-                    () => {
-
-                        logger.info(
-
-                            "HTTP Server Closed"
-
-                        );
-
-                    }
-
-                );
-
-            }
-
-        );
+        registerShutdown(server, context);
 
     }
 
