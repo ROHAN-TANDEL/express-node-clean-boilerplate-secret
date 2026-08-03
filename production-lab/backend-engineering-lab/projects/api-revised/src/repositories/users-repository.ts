@@ -28,9 +28,9 @@ export function usersRepository(
 
     async function findUserByEmail(email: string)
     {
-        const query = `SELECT user_id, firstname, email FROM users WHERE email = $1`;
+        const query = `SELECT user_id, firstname, email, password FROM users WHERE email = $1`;
 
-        return row<UserInterface>(context, query, [email]);
+        return row(context, query, [email]);
 
     }
 

@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {registerUsers} from "../routes/users-route";
 
@@ -8,7 +8,8 @@ export function auth() {
 
         password: string
 
-    ) {
+    )
+    {
 
         return bcrypt.hash(
 
@@ -26,7 +27,8 @@ export function auth() {
 
         hash: string
 
-    ) {
+    )
+    {
 
         return bcrypt.compare(
 
@@ -38,9 +40,44 @@ export function auth() {
 
     }
 
+
+    async function generateToken(
+
+        payload: object
+
+    )
+    {
+
+        return jwt.sign(
+
+            payload,
+
+            "production-lab"
+
+        );
+
+    }
+
+    async function verifyToken(
+
+        token: string
+
+    )
+    {
+
+        return jwt.verify(
+            token,
+
+            "production-lab"
+        );
+    }
+
+
     return {
         hashPassword,
-        verifyPassword
+        verifyPassword,
+        generateToken,
+        verifyToken
     }
 
 }

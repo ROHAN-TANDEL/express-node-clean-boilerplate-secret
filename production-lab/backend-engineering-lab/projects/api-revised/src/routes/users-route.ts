@@ -11,6 +11,8 @@ import {usersRepository} from "../repositories/users-repository";
 
 
 import { asyncHandlerMiddleware } from "../middleware/async-handler-middleware";
+import {authMiddleware} from "../middleware/auth-middleware";
+import {auth} from "../auth";
 
 export function registerUsers(
 
@@ -24,7 +26,7 @@ export function registerUsers(
     const userServ = userService(userRepo);
     const userControl = userController(userServ);
 
-    app.get("/users", asyncHandlerMiddleware(userControl.getUsers));
+    app.get("/users", authMiddleware(auth), asyncHandlerMiddleware(userControl.getUsers));
     app.get("/users/:id", userControl.getUserById);
     app.post("/user", validateMiddleware(createUserSchema), userControl.createUser);
 

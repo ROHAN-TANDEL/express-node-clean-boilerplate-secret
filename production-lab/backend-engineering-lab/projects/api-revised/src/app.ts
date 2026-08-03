@@ -1,10 +1,12 @@
 import express from "express";
 import { registerUsers } from "./routes/users-route";
-import { registerHealth } from "./routes/health-route";
+//import { registerHealth } from "./routes/health-route";
 import {registerTime} from "./routes/time-route";
 import {errorHandlerMiddleware} from "./middleware/error-handler-middleware";
 import {requestIdMiddleware} from "./middleware/request-id-middleware";
 import {createRequestLogger} from "./middleware/request-logger-middleware";
+import {registerAuth} from "./routes/auth-route";
+import {authMiddleware} from "./middleware/auth-middleware";
 
 export function createApp(context:any) {
 
@@ -14,7 +16,7 @@ export function createApp(context:any) {
     app.use(express.json());
     app.use(requestIdMiddleware);
     app.use(createRequestLogger(context));
-
+    // app.use(authMiddleware());
 
     /** todo: move the API into a common route file */
     app.get("/version", (req, res) => {
@@ -35,7 +37,8 @@ export function createApp(context:any) {
     });
 
     /** Registered APIs */
-    registerHealth(app, context);
+    registerAuth(app, context);
+    // registerHealth(app, context);
     registerTime(app, context);
     registerUsers(app, context);
 
