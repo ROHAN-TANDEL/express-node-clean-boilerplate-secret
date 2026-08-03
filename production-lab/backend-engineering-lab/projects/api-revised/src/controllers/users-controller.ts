@@ -3,16 +3,13 @@ import {NextFunction, Request, Response} from "express";
 import type { ApplicationContext } from "../context";
 
 import { userService } from "../services/users-service";
+import {AppError} from "../errors";
 
 
 export function userController(userServ: ReturnType<typeof userService>)
 {
-    async function getUsers(
-        req: Request,
-        res: Response,
-        next: NextFunction
-
-    ) {
+    async function getUsers(req: Request, res: Response, next: NextFunction)
+    {
 
         try {
 
@@ -28,57 +25,27 @@ export function userController(userServ: ReturnType<typeof userService>)
 
 
 
-    async function getUserById(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
+    async function getUserById(req: Request, res: Response)
+    {
 
+            const id = Number(req.params.id);
 
-        try {
-
-            const id = Number(
-                req.params.id
-            );
-
-            if (Number.isNaN(id)) {
-
-                return res.status(400).json({
-
-                    message: "Invalid user id"
-
-                });
-
-            }
+            if (Number.isNaN(id)) { throw new AppError(400, "Invalid user id"); }
 
             const user = await userServ.getUserById(id);
 
             res.json(user);
 
-        }  catch (error) {
-
-            next(error);
-
-        }
     }
 
 
-    async function createUser(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
-        try {
-
+    async function createUser(req: Request, res: Response)
+    {
             const user = await userServ.createUser(req.body);
 
             res.status(201).json(user);
 
-        } catch (error) {
-
-            next(error);
-
-        }
+            res.json(user);
     }
 
 
