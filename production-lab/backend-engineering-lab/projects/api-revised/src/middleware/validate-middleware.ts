@@ -1,7 +1,7 @@
 import { ZodSchema } from "zod";
 import { Request, Response, NextFunction } from "express";
 
-export function validate(
+export function validateMiddleware(
 
     schema: ZodSchema
 

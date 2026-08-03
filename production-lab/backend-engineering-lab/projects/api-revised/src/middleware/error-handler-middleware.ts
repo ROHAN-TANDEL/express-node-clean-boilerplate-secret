@@ -10,7 +10,7 @@ import type {
 
 import {ZodError} from "zod";
 
-export function errorHandler(
+export function errorHandlerMiddleware(
 
     error: Error,
 

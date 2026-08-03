@@ -6,7 +6,7 @@ import { createApp } from "../app";
 import {ApplicationContext, createContext} from "../context";
 
 import {createDatabase} from "../database";
-import {checkDatabaseHealth} from "../database/health";
+//import {checkDatabaseHealth} from "../database/health";
 
 
 export async function bootstrap() {
@@ -17,7 +17,7 @@ export async function bootstrap() {
 
         database = createDatabase();
         await database.connect();
-        await checkDatabaseHealth();
+        //await checkDatabaseHealth();
     }
 
     catch (error) {

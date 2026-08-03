@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import { AppError } from "./index";
 
 
-export function errorHandler(
+export function errorHandlerError(
 
     error: unknown,
 

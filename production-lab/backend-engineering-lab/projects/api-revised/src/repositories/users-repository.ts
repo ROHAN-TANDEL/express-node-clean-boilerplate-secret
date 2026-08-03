@@ -1,7 +1,7 @@
 import type { ApplicationContext } from "../context";
 import { rows, row } from "../database/query";
-import type { User } from "../types/user";
-import type { CreateUserInput } from "../validators/user";
+import type { UserInterface } from "../types/user-interface";
+import type { CreateUserInput } from "../validators/user-validator";
 
 
 export function usersRepository(
@@ -13,7 +13,7 @@ export function usersRepository(
     async function findAllUsers()
     {
         const query = `SELECT user_id, firstname, email FROM users ORDER BY user_id`;
-        return rows<User>(context, query);
+        return rows<UserInterface>(context, query);
 
     }
 
@@ -28,9 +28,9 @@ export function usersRepository(
 
     async function findUserByEmail(email: string)
     {
-        const query = `SELECT user_id, firstname, email FROM users WHERE email = $1`;
+        const query = `SELECT user_id, firstname, email, password FROM users WHERE email = $1`;
 
-        return row<User>(context, query, [email]);
+        return row(context, query, [email]);
 
     }
 
@@ -45,7 +45,7 @@ export function usersRepository(
 
         const inputs =[ input.email, input.firstname, input.email, input.email ];
 
-        return row<User>(context, query, inputs);
+        return row<UserInterface>(context, query, inputs);
 
     }
 

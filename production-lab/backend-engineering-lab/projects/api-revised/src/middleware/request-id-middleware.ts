@@ -5,7 +5,7 @@ import type {
     NextFunction
 } from "express";
 
-export function requestId(
+export function requestIdMiddleware(
 
     req: Request,
 
