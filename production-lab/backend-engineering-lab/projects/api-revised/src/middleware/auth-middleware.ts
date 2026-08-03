@@ -23,7 +23,6 @@ export function authMiddleware(authPro : any) {
 
         if ( type !== "Bearer" ) { throw new AppError( 401, "Invalid authentication header" ); }
 
-        console.log(authProvider);
         req.user = await authProvider.verifyToken(token);
 
         next();
