@@ -9,6 +9,9 @@ import {createUserSchema} from "../validators/user";
 import {userService} from "../services/users-service";
 import {usersRepository} from "../repositories/users-repository";
 
+
+import { asyncHandler } from "../middleware/async-handler";
+
 export function registerUsers(
 
     app: Express,
@@ -21,10 +24,8 @@ export function registerUsers(
     const userServ = userService(userRepo);
     const userControl = userController(userServ);
 
-    app.get("/users", userControl.getUsers);
-
+    app.get("/users", asyncHandler(userControl.getUsers));
     app.get("/users/:id", userControl.getUserById);
-
     app.post("/user", validate(createUserSchema), userControl.createUser);
 
 }

@@ -10,17 +10,13 @@ export function createApp(context:any) {
 
     const app = express();
 
+    /** Application middlewares  */
     app.use(express.json());
-
     app.use(requestId);
-
     app.use(createRequestLogger(context));
 
-    app.use(errorHandler);
 
-    registerHealth(app, context);
-
-
+    /** todo: move the API into a common route file */
     app.get("/version", (req, res) => {
 
         res.json({
@@ -31,17 +27,22 @@ export function createApp(context:any) {
 
     });
 
-
+    /** todo: move the API into a common route file */
     app.get("/ping", (req, res) => {
 
         res.send({message:"pong"});
 
     });
 
+    /** Registered APIs */
+    registerHealth(app, context);
     registerTime(app, context);
-
     registerUsers(app, context);
 
+
+    /** Keep it at the bottom Global Error Handler */
+    /** Generic Middleware for error handling Express feature */
+    app.use(errorHandler);
     return app;
 
 }

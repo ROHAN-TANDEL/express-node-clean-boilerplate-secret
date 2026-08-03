@@ -4,6 +4,8 @@ import { usersRepository as usersRepository } from "../repositories/users-reposi
 
 import type { CreateUserInput } from "../validators/user";
 import {BadRequestError} from "../errors/bad-request";
+import {AppError} from "../errors";
+import {NotFoundError} from "../errors/not-found-error";
 
 
 export function userService(userRepo: ReturnType<typeof usersRepository>)
@@ -11,12 +13,17 @@ export function userService(userRepo: ReturnType<typeof usersRepository>)
 
     async function getUsers()
     {
-        return userRepo.findAllUsers();
+        return await userRepo.findAllUsers();
     }
 
     async function getUserById(id: number)
     {
-        return userRepo.findUserById(id);
+
+        const user = await userRepo.findUserById(id);
+        if (!user || Object.keys(user).length === 0) {
+            throw new NotFoundError("User not found!");
+        }
+        return user;
     }
 
     async function createUser(input: CreateUserInput)
@@ -25,7 +32,7 @@ export function userService(userRepo: ReturnType<typeof usersRepository>)
 
         if (userExists) { throw new BadRequestError("Email already exists"); }
 
-        return userRepo.createUser(input);
+        return await userRepo.createUser(input);
 
     }
 
