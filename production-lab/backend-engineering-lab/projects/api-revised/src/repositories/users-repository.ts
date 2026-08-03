@@ -2,6 +2,7 @@ import type { ApplicationContext } from "../context";
 import { rows, row } from "../database/query";
 import type { UserInterface } from "../types/user-interface";
 import type { CreateUserInput } from "../validators/user-validator";
+import {transaction} from "../database/transaction";
 
 
 export function usersRepository(
@@ -35,7 +36,7 @@ export function usersRepository(
     }
 
 
-    async function createUser(input: CreateUserInput)
+    async function createUser(input: CreateUserInput, context? :any)
     {
 
         const query = `INSERT INTO users 
@@ -48,6 +49,19 @@ export function usersRepository(
         return row<UserInterface>(context, query, inputs);
 
     }
+
+
+    async function createUserTransaction(input: CreateUserInput, context? : any)
+    {
+        await transaction(context, async (client) => {
+
+            await createUser(input, client);
+            await createUser(input, client);
+
+        });
+    }
+
+
 
     return {
         findAllUsers,
