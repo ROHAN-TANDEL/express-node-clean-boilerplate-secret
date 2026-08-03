@@ -2,8 +2,8 @@ import type { ApplicationContext } from "../context";
 
 import { usersRepository as usersRepository } from "../repositories/users-repository";
 
-import type { CreateUserInput } from "../validators/user";
-import {BadRequestError} from "../errors/bad-request";
+import type { CreateUserInput } from "../validators/user-validator";
+import {BadRequestError} from "../errors/bad-request-error";
 import {AppError} from "../errors";
 import {NotFoundError} from "../errors/not-found-error";
 
@@ -21,7 +21,7 @@ export function userService(userRepo: ReturnType<typeof usersRepository>)
 
         const user = await userRepo.findUserById(id);
         if (!user || Object.keys(user).length === 0) {
-            throw new NotFoundError("User not found!");
+            throw new NotFoundError("UserInterface not found!");
         }
         return user;
     }

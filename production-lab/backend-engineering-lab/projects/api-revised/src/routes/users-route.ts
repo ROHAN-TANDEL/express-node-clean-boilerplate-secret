@@ -4,13 +4,13 @@
 import type { Express } from "express";
 import type { ApplicationContext } from "../context";
 import { userController } from "../controllers/users-controller";
-import {validate} from "../middleware/validate";
-import {createUserSchema} from "../validators/user";
+import {validateMiddleware} from "../middleware/validate-middleware";
+import {createUserSchema} from "../validators/user-validator";
 import {userService} from "../services/users-service";
 import {usersRepository} from "../repositories/users-repository";
 
 
-import { asyncHandler } from "../middleware/async-handler";
+import { asyncHandlerMiddleware } from "../middleware/async-handler-middleware";
 
 export function registerUsers(
 
@@ -24,8 +24,8 @@ export function registerUsers(
     const userServ = userService(userRepo);
     const userControl = userController(userServ);
 
-    app.get("/users", asyncHandler(userControl.getUsers));
+    app.get("/users", asyncHandlerMiddleware(userControl.getUsers));
     app.get("/users/:id", userControl.getUserById);
-    app.post("/user", validate(createUserSchema), userControl.createUser);
+    app.post("/user", validateMiddleware(createUserSchema), userControl.createUser);
 
 }

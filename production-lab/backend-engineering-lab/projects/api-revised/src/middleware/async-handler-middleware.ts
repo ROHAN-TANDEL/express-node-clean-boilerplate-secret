@@ -4,7 +4,7 @@ import type {
 
 } from "express";
 
-export function asyncHandler(
+export function asyncHandlerMiddleware(
 
     handler: RequestHandler
 

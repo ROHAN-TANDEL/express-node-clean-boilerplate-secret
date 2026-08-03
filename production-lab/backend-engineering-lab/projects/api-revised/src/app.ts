@@ -1,10 +1,10 @@
 import express from "express";
-import { registerUsers } from "./routes/users";
-import { registerHealth } from "./routes/health";
-import {registerTime} from "./routes/time";
-import {errorHandler} from "./middleware/error-handler";
-import {requestId} from "./middleware/request-id";
-import {createRequestLogger} from "./middleware/request-logger";
+import { registerUsers } from "./routes/users-route";
+import { registerHealth } from "./routes/health-route";
+import {registerTime} from "./routes/time-route";
+import {errorHandlerMiddleware} from "./middleware/error-handler-middleware";
+import {requestIdMiddleware} from "./middleware/request-id-middleware";
+import {createRequestLogger} from "./middleware/request-logger-middleware";
 
 export function createApp(context:any) {
 
@@ -12,7 +12,7 @@ export function createApp(context:any) {
 
     /** Application middlewares  */
     app.use(express.json());
-    app.use(requestId);
+    app.use(requestIdMiddleware);
     app.use(createRequestLogger(context));
 
 
@@ -42,7 +42,7 @@ export function createApp(context:any) {
 
     /** Keep it at the bottom Global Error Handler */
     /** Generic Middleware for error handling Express feature */
-    app.use(errorHandler);
+    app.use(errorHandlerMiddleware);
     return app;
 
 }
