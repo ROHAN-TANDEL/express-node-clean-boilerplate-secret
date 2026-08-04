@@ -1,69 +1,57 @@
 import type { ApplicationContext } from "../context";
-import {findAllUsers, findUserById, createUserRepository, findUserByEmail } from "../repositories/users-repository";
-import type { CreateUserInput } from "../validators/user";
-import {BadRequestError} from "../errors/bad-request";
+
+import { usersRepository as usersRepository } from "../repositories/users-repository";
+
+import type { CreateUserInput } from "../validators/user-validator";
+import {BadRequestError} from "../errors/bad-request-error";
+import {AppError} from "../errors";
+import {NotFoundError} from "../errors/not-found-error";
 
 
-export async function getUsers(
-    context: ApplicationContext
-) {
+export function userService(context: ApplicationContext, userRepo: ReturnType<typeof usersRepository>)
+{
 
-    return findAllUsers(
-        context
-    );
+    async function getUsers()
+    {
+        const cachedUsers = await context.cache.get( "users" );
 
-}
+        if (cachedUsers) { return JSON.parse(cachedUsers);}
 
+        const users = await userRepo.findAllUsers();
 
-export async function getUserById(
-    context: ApplicationContext,
-    id: number
-) {
+        await context.cache.set( "users", JSON.stringify(users) );
 
-    return findUserById(
-        id
-    );
+        return users;
+    }
 
-}
+    async function getUserById(id: number)
+    {
+        const user = await userRepo.findUserById(id);
+        if (!user || Object.keys(user).length === 0) {
+            throw new NotFoundError("UserInterface not found!");
+        }
+        return user;
+    }
 
+    async function createUser(input: CreateUserInput)
+    {
+        const userExists = await userRepo.findUserByEmail(input.email);
 
-export async function createUser(
+        if (userExists) { throw new BadRequestError("Email already exists"); }
 
-    context: ApplicationContext,
+        await context.cache.del( "users" );
 
-    input: CreateUserInput
-
-) {
-
-
-
-
-    const existingUser = await findUserByEmail(
-
-        context,
-
-        input.email
-
-    );
-
-    if (existingUser) {
-
-        throw new BadRequestError(
-
-            "Email already exists"
-
-        );
+        return await userRepo.createUser(input);
 
     }
 
 
+    return {
 
-    return createUserRepository(
+        getUsers,
 
-        context,
+        getUserById,
 
-        input
-
-    );
-
+        createUser
+    }
 }

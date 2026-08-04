@@ -6,18 +6,27 @@ import { createApp } from "../app";
 import {ApplicationContext, createContext} from "../context";
 
 import {createDatabase} from "../database";
-import {checkDatabaseHealth} from "../database/health";
+import {createCache} from "../cache";
+import {jobs} from "../jobs";
+import {workers} from "../workers";
+import {asyncHandlerMiddleware} from "../middleware/async-handler-middleware";
+//import {checkDatabaseHealth} from "../database/health";
 
 
 export async function bootstrap() {
 
     const logger = createLogger(config);
-    let database;
+    let database, cache, jobsProvider, workersProvider;
+
     try {
 
+        workersProvider = workers();
+        jobsProvider = jobs(workersProvider);
+
+        cache = await createCache();
         database = createDatabase();
         await database.connect();
-        await checkDatabaseHealth();
+        //await checkDatabaseHealth();
     }
 
     catch (error) {
@@ -34,13 +43,18 @@ export async function bootstrap() {
 
         config,
 
-        database
+        database,
+
+        cache,
+
+        jobsProvider,
+
+        workersProvider
 
     );
 
     const app = createApp(context);
 
     return {app, context};
-
 
 }

@@ -2,109 +2,61 @@ import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
-import { getUsers, getUserById, createUser } from "../services/users-service";
+import { userService } from "../services/users-service";
+import {AppError} from "../errors";
 
-import {createUserSchema} from "../validators/user";
 
-export function usersController(
-
-    context: ApplicationContext
-
-) {
-
-    return async function (
-
-        req: Request,
-
-        res: Response,
-
-        next: NextFunction
-
-    ) {
+export function userController(userServ: ReturnType<typeof userService>)
+{
+    async function getUsers(req: Request, res: Response, next: NextFunction)
+    {
 
         try {
-            const response = await getUsers(context);
+
+            console.log(req.user);
+            const response = await userServ.getUsers();
+
             res.json(response);
+
         } catch (error) {
             next(error);
         }
     }
-}
 
 
-export function createUserByIdController(
-    context: ApplicationContext
-) {
-
-    return async function (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
 
 
-        try {
+    async function getUserById(req: Request, res: Response)
+    {
 
-            const id = Number(
-                req.params.id
-            );
+            const id = Number(req.params.id);
 
-            if (Number.isNaN(id)) {
+            if (Number.isNaN(id)) { throw new AppError(400, "Invalid user id"); }
 
-                return res.status(400).json({
-
-                    message: "Invalid user id"
-
-                });
-
-            }
-
-            const user = await getUserById(
-                context,
-                id
-            );
+            const user = await userServ.getUserById(id);
 
             res.json(user);
-        }  catch (error) {
-            next(error);
-        }
+
+    }
 
 
-    };
+    async function createUser(req: Request, res: Response)
+    {
+            const user = await userServ.createUser(req.body);
 
-}
+            res.status(201).json(user);
 
-
-export function createCreateUserController(
-    context: ApplicationContext
-) {
-
-    return async function (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
+            res.json(user);
+    }
 
 
+    return {
 
-        try {
+        getUsers,
 
-            const user = await createUser(
+        getUserById,
 
-                context,
-
-                req.body
-
-            );
-
-            res.status(201).json(
-
-                user
-
-            );
-        } catch (error) {
-            next(error);
-        }
+        createUser
 
     };
 

@@ -1,101 +1,72 @@
 import type { ApplicationContext } from "../context";
 import { rows, row } from "../database/query";
-import type { User } from "../types/user";
-import type { CreateUserInput } from "../validators/user";
+import type { UserInterface } from "../types/user-interface";
+import type { CreateUserInput } from "../validators/user-validator";
+import {transaction} from "../database/transaction";
 
 
-export async function findAllUsers(
+export function usersRepository(
+
     context: ApplicationContext
-) {
-
-    return rows<User>(
-        `
-    SELECT
-        user_id,
-        firstname,
-        email
-    FROM users
-    ORDER BY user_id
-    `
-    );
-
-}
-
-
-export async function findUserById(
-
-    id: number
 
 ) {
 
-    return row(
-        `
-    SELECT
-        user_id,
-        firstname,
-        email
-    FROM users
-    WHERE user_id = $1
-    ORDER BY user_id
-    `, [id]
-    );
+    async function findAllUsers()
+    {
+        const query = `SELECT user_id, firstname, email FROM users ORDER BY user_id`;
+        return rows<UserInterface>(context, query);
 
-}
+    }
 
+    async function findUserById(id: number)
+    {
+        const query = ` SELECT user_id, firstname, email 
+                        FROM users WHERE user_id = $1 ORDER BY user_id`;
 
-export async function findUserByEmail(
+        return row(context, query, [id]);
 
-    context: ApplicationContext,
+    }
 
-    email: string
+    async function findUserByEmail(email: string)
+    {
+        const query = `SELECT user_id, firstname, email, password, role FROM users WHERE email = $1`;
 
-) {
+        return row(context, query, [email]);
 
-    return row<User>(`
-
-        SELECT
-            user_id,
-            firstname,
-            email
-        FROM users
-        WHERE email = $1
-
-    `, [email]);
-
-}
+    }
 
 
+    async function createUser(input: CreateUserInput, context? :any)
+    {
 
-export async function createUserRepository(
+        const query = `INSERT INTO users 
+                        (username, firstname, email, password ) 
+                        VALUES ( $1, $2, $3, $4 ) 
+                        RETURNING user_id, firstname, email`;
 
-    context: ApplicationContext,
+        const inputs =[ input.email, input.firstname, input.email, input.email ];
 
-    input: CreateUserInput
+        return row<UserInterface>(context, query, inputs);
 
-) {
+    }
 
-    return row<User>(`
 
-        INSERT INTO users ( 
-            username, firstname,
-            email, password
+    async function createUserTransaction(input: CreateUserInput, context? : any)
+    {
+        await transaction(context, async (client) => {
 
-        )
+            await createUser(input, client);
+            await createUser(input, client);
 
-        VALUES ( $1, $2, $3, $4 )
+        });
+    }
 
-        RETURNING user_id, firstname, email
 
-    `, [
 
-        input.email,
-
-        input.firstname,
-
-        input.email,
-
-        input.email
-
-    ]);
-
+    return {
+        findAllUsers,
+        findUserByEmail,
+        findUserById,
+        createUser
+    }
 }
