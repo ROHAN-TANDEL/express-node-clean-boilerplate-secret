@@ -1,96 +1,62 @@
-import { Request, Response } from "express";
+import {NextFunction, Request, Response} from "express";
 
 import type { ApplicationContext } from "../context";
 
-import { getUsers, getUserById, createUser } from "../services/users-service";
-
-import {createUserSchema} from "../validators/user";
-
-export function usersController(
-
-    context: ApplicationContext
-
-) {
-
-    return async function (
-
-        req: Request,
-
-        res: Response
-
-    ) {
-
-        const response = await getUsers(context);
-        res.json(response);
-    }
-}
+import { userService } from "../services/users-service";
+import {AppError} from "../errors";
 
 
-export function createUserByIdController(
-    context: ApplicationContext
-) {
+export function userController(userServ: ReturnType<typeof userService>)
+{
+    async function getUsers(req: Request, res: Response, next: NextFunction)
+    {
 
-    return async function (
-        req: Request,
-        res: Response
-    ) {
+        try {
 
-        const id = Number(
-            req.params.id
-        );
+            console.log(req.user);
+            const response = await userServ.getUsers();
 
-        if (Number.isNaN(id)) {
+            res.json(response);
 
-            return res.status(400).json({
-
-                message: "Invalid user id"
-
-            });
-
+        } catch (error) {
+            next(error);
         }
-
-        const user = await getUserById(
-            context,
-            id
-        );
-
-        res.json(user);
-
-    };
-
-}
+    }
 
 
-export function createCreateUserController(
-    context: ApplicationContext
-) {
-
-    return async function (
-        req: Request,
-        res: Response
-    ) {
-
-        const input = createUserSchema.parse(
-
-            req.body
-
-        );
 
 
-        const user = await createUser(
+    async function getUserById(req: Request, res: Response)
+    {
 
-            context,
+            const id = Number(req.params.id);
 
-            input
+            if (Number.isNaN(id)) { throw new AppError(400, "Invalid user id"); }
 
-        );
+            const user = await userServ.getUserById(id);
 
-        res.status(201).json(
+            res.json(user);
 
-            user
+    }
 
-        );
 
+    async function createUser(req: Request, res: Response)
+    {
+            const user = await userServ.createUser(req.body);
+
+            res.status(201).json(user);
+
+            res.json(user);
+    }
+
+
+    return {
+
+        getUsers,
+
+        getUserById,
+
+        createUser
 
     };
 
