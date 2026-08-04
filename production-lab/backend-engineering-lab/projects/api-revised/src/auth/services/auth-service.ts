@@ -23,7 +23,11 @@ export function authService(
         if (!isValid) { throw new AppError( 401, "Invalid email or password" ); }
 
         /** generate JWT token */
-        const token = await authProvider.generateToken({ id: user?.id, email: user?.email });
+        const token = await authProvider.generateToken({
+            id: user?.user_id,
+            email: user?.email,
+            role: user?.role
+        });
 
         return { token };
     }

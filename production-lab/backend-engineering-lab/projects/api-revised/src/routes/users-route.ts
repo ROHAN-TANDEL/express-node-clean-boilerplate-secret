@@ -13,6 +13,7 @@ import {usersRepository} from "../repositories/users-repository";
 import { asyncHandlerMiddleware } from "../middleware/async-handler-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {auth} from "../auth";
+import {roleMiddleware} from "../middleware/role-middleware";
 
 export function registerUsers(
 
@@ -23,10 +24,10 @@ export function registerUsers(
 ) {
 
     const userRepo = usersRepository(context);
-    const userServ = userService(userRepo);
+    const userServ = userService(context, userRepo);
     const userControl = userController(userServ);
 
-    app.get("/users", authMiddleware(auth), asyncHandlerMiddleware(userControl.getUsers));
+    app.get("/users", authMiddleware(auth), roleMiddleware("client"), asyncHandlerMiddleware(userControl.getUsers));
     app.get("/users/:id", userControl.getUserById);
     app.post("/user", validateMiddleware(createUserSchema), userControl.createUser);
 

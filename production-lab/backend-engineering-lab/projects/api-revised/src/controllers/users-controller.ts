@@ -13,6 +13,7 @@ export function userController(userServ: ReturnType<typeof userService>)
 
         try {
 
+            console.log(req.user);
             const response = await userServ.getUsers();
 
             res.json(response);

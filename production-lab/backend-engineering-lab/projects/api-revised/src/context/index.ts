@@ -10,6 +10,12 @@ export interface ApplicationContext {
 
     database: Pool;
 
+    cache: any,
+
+    jobsProvider: any,
+
+    workersProvider: any
+
 }
 
 
@@ -19,7 +25,13 @@ export function createContext(
 
     config: AppConfig,
 
-    database: Pool
+    database: Pool,
+
+    cache: any,
+
+    jobsProvider: any,
+
+    workersProvider: any
 
 ): ApplicationContext {
 
@@ -29,7 +41,13 @@ export function createContext(
 
         config,
 
-        database
+        database,
+
+        cache,
+
+        jobsProvider,
+
+        workersProvider
 
     };
 

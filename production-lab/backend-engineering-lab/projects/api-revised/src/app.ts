@@ -7,6 +7,8 @@ import {requestIdMiddleware} from "./middleware/request-id-middleware";
 import {createRequestLogger} from "./middleware/request-logger-middleware";
 import {registerAuth} from "./routes/auth-route";
 import {authMiddleware} from "./middleware/auth-middleware";
+import {asyncHandlerMiddleware} from "./middleware/async-handler-middleware";
+import {jobs} from "./jobs";
 
 export function createApp(context:any) {
 
@@ -41,6 +43,19 @@ export function createApp(context:any) {
     // registerHealth(app, context);
     registerTime(app, context);
     registerUsers(app, context);
+
+
+    app.post("/jobs/test",
+        asyncHandlerMiddleware(
+            async function(req, res)
+            {
+
+                await context.jobsProvider.enqueue( "generate-report", { reportId: 1001 } );
+
+                res.status(202).json({ message: "Job queued" });
+            }
+        )
+    );
 
 
     /** Keep it at the bottom Global Error Handler */
