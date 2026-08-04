@@ -24,7 +24,7 @@ export function registerUsers(
 ) {
 
     const userRepo = usersRepository(context);
-    const userServ = userService(userRepo);
+    const userServ = userService(context, userRepo);
     const userControl = userController(userServ);
 
     app.get("/users", authMiddleware(auth), roleMiddleware("client"), asyncHandlerMiddleware(userControl.getUsers));
