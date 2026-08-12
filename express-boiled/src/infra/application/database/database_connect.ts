@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import AppKernel from "../../app/kernel/kernel.js";
+import AppKernel from "../../../app/kernel/kernel.js";
 export class Database {
     context;
     constructor(context) {
@@ -24,4 +24,4 @@ export class Database {
         await this.disconnect(pool);
     }
 }
-//# sourceMappingURL=pgsql.js.map
+//# sourceMappingURL=database_connect.js.map

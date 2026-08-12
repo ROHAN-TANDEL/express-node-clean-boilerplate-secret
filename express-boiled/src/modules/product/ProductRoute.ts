@@ -1,33 +1,24 @@
 import express from "express";
-import AuthController from "./AuthController.js";
-import AuthMiddleware from "./AuthMiddleware.js";
-
-export default class AuthRoute {
-    constructor(private readonly context:any) {
+import ProductController from "./ProductController.js";
+import ProductMiddleware from "./ProductMiddleware.js";
+export default class ProductRoute {
+    context;
+    constructor(context) {
+        this.context = context;
     }
-
-    public route(context:any)
-    {
-
-        const auth = express.Router();
-        const authRouter = express.Router();
-        const authController = new AuthController(context);
-        const authMid = new AuthMiddleware(context).auth;
-
-        auth.route('/auth');
-
-        auth.get('/ping', authController.ping);
-
-        auth.post('/register', authController.register);
-
-        auth.post('/login', authController.login);
-
-        auth.post('/refresh-token', authController.refreshToken);
-
-        auth.post('/logout', authMid, authController.logout);
-
-        authRouter.use('/auth', auth);
-
-        return authRouter;
+    route(context) {
+        const route = express.Router();
+        const register = express.Router();
+        const productController = new ProductController(context);
+        const authMid = new ProductMiddleware(context).auth;
+        route.use(authMid);
+        route.get('', productController.getProducts);
+        route.get('/:id', productController.getProduct);
+        route.post('/products', productController.createProduct);
+        route.post('/products/:id', productController.updateProduct);
+        route.delete('/products/:id', productController.deleteProduct);
+        register.use('/products', route);
+        return register;
     }
 }
+//# sourceMappingURL=ProductRoute.js.map
