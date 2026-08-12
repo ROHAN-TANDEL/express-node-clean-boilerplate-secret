@@ -5,7 +5,7 @@ export default class RedisRedis {
         this.context = context;
     }
     async connect() {
-        const connection = {
+        const connection:any = {
             url: this.context.env.REDIS_URL,
             socket: {
                 reconnectStrategy: false

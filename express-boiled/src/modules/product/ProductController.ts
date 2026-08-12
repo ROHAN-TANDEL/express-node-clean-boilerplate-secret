@@ -102,9 +102,8 @@ export default class ProductController {
                             status = COALESCE($6, status),
                             version = COALESCE($7, version)
                             
-                            WHERE id=$8 and version = $9 AND deleted_at IS NOT NULL`;
-            `
-                           `;
+                            WHERE version = $8 and id=$9 AND deleted_at IS NULL`;
+
             const input = [
                 data?.sku,
                 data?.name,
@@ -113,9 +112,13 @@ export default class ProductController {
                 data?.stock_quantity,
                 data?.status,
                 data?.version + 1,
+                data?.version,
                 id
             ];
+
+            this.context.db.print(query, input);
             const result = await this.context.client.query(query, input);
+
             if (result.rowCount > 0) {
                 const cacheKey = `get-product:${id}`;
                 await this.context.redis.del(cacheKey);
@@ -124,6 +127,11 @@ export default class ProductController {
                     data: result.rowCount
                 });
             }
+
+            return res.status(400).json({
+                status: "error",
+                message: "Product update failed"
+            });
         }
         catch (error) {
             console.error("Product error:", error);

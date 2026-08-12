@@ -56,10 +56,10 @@ export default class UserController {
                 query += ` AND status = '${filter.status.toUpperCase()}' `;
             }
             if (filter?.deleted !== undefined && !Boolean(filter.deleted)) {
-                query += ` AND deleted_at IS NOT NULL `;
+                query += ` AND deleted_at IS NULL `;
             }
             else if (filter?.deleted !== undefined && Boolean(filter?.deleted)) {
-                query += ` AND deleted_at IS NULL `;
+                query += ` AND deleted_at IS NOT NULL `;
             }
             /** Add standard sorting */
             query += ` ORDER BY created_at DESC `;
