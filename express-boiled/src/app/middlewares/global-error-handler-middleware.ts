@@ -1,12 +1,14 @@
 import { ZodError } from "zod";
+
 export class GlobalErrorHandlerMiddleware {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     startMiddleware() {
         console.log({ middleware_status: "setting global error handler middleware..." });
-        return (error, req, res, next) => {
+
+        return (error: any, _req: any, res: any, _next: any) => {
             if (error instanceof ZodError) {
                 return res.status(400).json({
                     message: error.message,

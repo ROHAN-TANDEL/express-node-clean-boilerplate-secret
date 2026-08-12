@@ -1,4 +1,5 @@
 import z from "zod";
+
 export class EnvValidator {
     validate() {
         const environmentBoolean = z.preprocess((value) => {

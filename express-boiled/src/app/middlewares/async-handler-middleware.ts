@@ -1,12 +1,13 @@
-import express, {} from "express";
 export class AsyncHandlerMiddleware {
     context;
-    constructor(context) {
+
+    constructor(context: any) {
         this.context = context;
     }
+
     startMiddleware() {
         console.log({ middleware_status: "setting async error handler middleware..." });
-        return (fn) => (req, res, next) => {
+        return (fn : any) => (req: any, res: any, next: any) => {
             Promise.resolve(fn(req, res, next)).catch(next);
         };
     }

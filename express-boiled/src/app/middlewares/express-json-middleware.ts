@@ -1,7 +1,8 @@
 import express from 'express';
+
 export class ExpressJsonMiddleware {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     startMiddleware() {

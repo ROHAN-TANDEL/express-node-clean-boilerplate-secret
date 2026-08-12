@@ -1,11 +1,15 @@
 import { randomUUID } from "crypto";
+
 export class RequestIdMiddleware {
+
     context;
-    constructor(context) {
+
+    constructor(context: any) {
         this.context = context;
     }
+
     startMiddleware() {
-        return (req, res, next) => {
+        return (req: any, res: any, next: any) => {
             // const headerRequestId = req.headers['x-request-id'];
             // req.requestId = typeof headerRequestId === 'string' ? headerRequestId : randomUUID();
             // res.setHeader('X-Request-Id', req.requestId);

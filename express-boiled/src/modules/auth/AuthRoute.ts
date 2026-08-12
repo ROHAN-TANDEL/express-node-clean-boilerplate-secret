@@ -1,12 +1,16 @@
 import express from "express";
 import AuthController from "./AuthController.js";
 import AuthMiddleware from "./AuthMiddleware.js";
+
 export default class AuthRoute {
+
     context;
-    constructor(context) {
+
+    constructor(context:any) {
         this.context = context;
     }
-    route(context) {
+
+    route(context:any) {
         const auth = express.Router();
         const authRouter = express.Router();
         const authController = new AuthController(context);

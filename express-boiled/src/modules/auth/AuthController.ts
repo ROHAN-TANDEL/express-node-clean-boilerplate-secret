@@ -1,9 +1,9 @@
 export default class AuthController {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
-    async ping(req, res) {
+    async ping(_req: any, res: any) {
         return res.status(200).send({
             status: "OK",
             data: "PONG"
@@ -20,7 +20,7 @@ export default class AuthController {
             return [];
         }
     }
-    async insertUser(user) {
+    async insertUser(user: any) {
         try {
             const query = `INSERT INTO master.users (first_name,
                                               last_name,
@@ -40,7 +40,7 @@ export default class AuthController {
             const result = await this.context.client.query(query, inputs);
             return result.rows;
         }
-        catch (error) {
+        catch (error: any) {
             if (error.code === "23505") {
                 return {
                     "status": "error",
@@ -51,7 +51,7 @@ export default class AuthController {
             throw error;
         }
     }
-    register = async (req, res) => {
+    register = async (req: any, res: any) => {
         try {
             const user = req.body;
             user.status = 'ACTIVE';
@@ -68,8 +68,8 @@ export default class AuthController {
                     "message": "user not created, can not get roles"
                 });
             }
-            if (roles.some((roleObj) => roleObj.name === user.role)) {
-                const foundRole = roles.find((r) => r.name.toLowerCase() === 'admin' || r.name.toLowerCase() === 'user');
+            if (roles.some((roleObj: any) => roleObj.name === user.role)) {
+                const foundRole = roles.find((r: any) => r.name.toLowerCase() === 'admin' || r.name.toLowerCase() === 'user');
                 user.role_id = parseInt(foundRole.id);
                 delete user.role;
             }
@@ -103,7 +103,7 @@ export default class AuthController {
                 });
             }
         }
-        catch (error) {
+        catch (error: any) {
             console.log(error);
             return res.status(500).json({
                 status: "failed",
@@ -111,9 +111,9 @@ export default class AuthController {
             });
         }
     };
-    logout = async (req, res) => {
+    logout = async (req: any, res: any) => {
         try {
-            const { jti, exp, id } = req.user;
+            const { jti, exp } = req.user;
             const currentTimestamp = Math.floor(Date.now() / 1000);
             const secondsLeft = exp - currentTimestamp;
             if (secondsLeft > 0) {
@@ -136,13 +136,13 @@ export default class AuthController {
             });
         }
     };
-    async userExists(email) {
+    async userExists(email: any) {
         try {
             const q = `SELECT * FROM master.users WHERE email=$1 AND status='ACTIVE' AND deleted_at IS NULL `;
             const result = await this.context.client.query(q, [email]);
             return result.rows;
         }
-        catch (error) {
+        catch (error: any) {
             console.log(error);
             return {
                 "status": "failed",
@@ -150,7 +150,7 @@ export default class AuthController {
             };
         }
     }
-    refreshToken = async (req, res) => {
+    refreshToken = async (req: any, res: any) => {
         try {
             const token = req.body;
             const payload = await this.context.auth.refreshToken().validate(token.token);
@@ -199,7 +199,7 @@ export default class AuthController {
             userDetail.exp = payload.exp;
             const refreshToken = await this.context.auth.accessToken().sign(userDetail);
             /**store fresh token */
-            const storeToken = await this.store(refreshToken, userId, userDetail.exp);
+            await this.store(refreshToken, userId, userDetail.exp);
             return res.status(200).json({
                 status: "success",
                 data: {
@@ -217,7 +217,7 @@ export default class AuthController {
             });
         }
     };
-    async store(refreshToken, userId, exp) {
+    async store(refreshToken: any, userId: any, exp?: any) {
         const client = await this.context.client.connect();
         try {
             await client.query('BEGIN');
@@ -236,7 +236,7 @@ export default class AuthController {
                 message: "refresh token persisted"
             };
         }
-        catch (error) {
+        catch (error: any) {
             try {
                 await client.query('ROLLBACK');
             }
@@ -259,7 +259,7 @@ export default class AuthController {
             client.release();
         }
     }
-    login = async (req, res) => {
+    login = async (req: any, res: any) => {
         try {
             const login = req.body;
             if (!login || login?.email === undefined || login?.password === undefined) {

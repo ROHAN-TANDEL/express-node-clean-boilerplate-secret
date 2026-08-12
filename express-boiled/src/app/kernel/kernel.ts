@@ -13,6 +13,7 @@ import { CookieMiddleware } from "../middlewares/cookie-parser-middleware.js";
 import { ExpressStaticMiddleware } from "../middlewares/express-static-middleware.js";
 import { GlobalErrorHandlerMiddleware } from "../middlewares/global-error-handler-middleware.js";
 export default class Kernel {
+
     start() {
         return {
             Log: Logs,
@@ -20,6 +21,7 @@ export default class Kernel {
             Server: { start: StartServer, stop: StopServer },
         };
     }
+
     middleware() {
         return {
             before: {

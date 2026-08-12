@@ -1,8 +1,9 @@
 import express from 'express';
 import path from "path";
+
 export class ExpressStaticMiddleware {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     startMiddleware() {

@@ -4,14 +4,16 @@ import AuthRoute from "./src/modules/auth/AuthRoute.js";
 import UserRoute from "./src/modules/user/UserRoute.js";
 import ProductRoute from "./src/modules/product/ProductRoute.js";
 class Application {
-    context;
-    boot;
+
+    context: any;
+    boot: any;
+
     appContext() {
         this.boot = new KernelContext();
         this.context = this.boot.init();
         return this.context;
     }
-    appBeforeMiddleware(app) {
+    appBeforeMiddleware(app:any) {
         const context = this.context;
         app.use((new context.appMiddleware.before.helmetMiddleware(context)).startMiddleware());
         app.use((new context.appMiddleware.before.corsMiddleware(context)).startMiddleware());
@@ -22,7 +24,7 @@ class Application {
         app.use((new context.appMiddleware.before.cookieMiddleware(context)).startMiddleware());
         app.use((new context.appMiddleware.before.expressStaticMiddleware(context)).startMiddleware());
     }
-    appAfterMiddleware(app) {
+    appAfterMiddleware(app:any) {
         const context = this.context;
         app.use((new context.appMiddleware.after.routeNotFoundCheckMiddleware(context)).startMiddleware());
         app.use((new context.appMiddleware.after.globalErrorHandlerMiddleware(context)).startMiddleware());

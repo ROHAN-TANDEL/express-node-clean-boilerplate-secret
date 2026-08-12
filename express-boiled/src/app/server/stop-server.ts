@@ -1,31 +1,35 @@
 export class StopServer {
     context;
-    constructor(context) {
+
+    constructor(context: any) {
         this.context = context;
     }
+
     // Stores all future dependencies dynamically
     tasks = [];
     isShuttingDown = false;
+
     /**
      * Register a new component that needs a graceful exit.
      * Example: stopServer.register('Database', () => db.disconnect());
      */
-    register(name, cleanup) {
+    register(name: any, cleanup: any) {
         this.tasks.push({ name, cleanup });
         return this; // Allows method chaining
     }
+
     /**
      * Initializes the signal listeners
      */
-    init(server) {
+    init() {
         this.context.logger.info({ server_stop_status: "registering graceful shutdown... " });
         console.info({ server_stop_status: "registering graceful shutdown... " });
         const context = this.context;
-        const stopper = (server, logger) => {
+        const stopper = (server: any, logger: any) => {
             server.requestTimeout = context.env.HTTP_REQUEST_TIMEOUT_MS;
             server.headersTimeout = context.env.HTTP_HEADERS_TIMEOUT_MS;
             server.keepAliveTimeout = context.env.HTTP_KEEP_ALIVE_TIMEOUT_MS;
-            const handleSignal = (signal) => {
+            const handleSignal = (signal: any) => {
                 if (this.isShuttingDown) {
                     return;
                 }
@@ -33,17 +37,17 @@ export class StopServer {
                 logger.info(signal);
                 logger.info('graceful shutdown started');
                 logger.info(`Received ${signal}. Starting dynamic shutdown sequencer...`);
-                this.shutdown(server, logger);
+                this.shutdown(server);
             };
             process.on("SIGINT", () => handleSignal("SIGINT"));
             process.on("SIGTERM", () => handleSignal("SIGTERM"));
             process.once('unhandledRejection', (error) => {
                 context.logger.fatal({ err: error }, 'unhandled promise rejection');
-                this.shutdown(server, logger);
+                this.shutdown(server);
             });
             process.once('uncaughtException', (error) => {
                 context.logger.fatal({ err: error }, 'uncaught exception');
-                this.shutdown(server, logger);
+                this.shutdown(server);
             });
         };
         return { stopper };
@@ -51,7 +55,7 @@ export class StopServer {
     /**
      * Executes the actual shutdown sequence
      */
-    shutdown(server, logger) {
+    shutdown(server: any) {
         // Force exit safety timeout (e.g., 10 seconds)
         const forceExit = setTimeout(() => {
             this.context.logger.error("Shutdown timed out! Forcefully terminating.");

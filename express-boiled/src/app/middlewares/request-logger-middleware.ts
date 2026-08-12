@@ -1,9 +1,13 @@
 import { Counter, Histogram, Registry, collectDefaultMetrics } from 'prom-client';
+
 export class RequestLoggerMiddleware {
+
     context;
-    constructor(context) {
+
+    constructor(context: any) {
         this.context = context;
     }
+
     startMiddleware() {
         console.log({ middleware_status: "setting request logger middleware..." });
         const registry = new Registry();
@@ -21,7 +25,7 @@ export class RequestLoggerMiddleware {
             registers: [registry],
         });
         const appContext = this.context;
-        return function (req, res, next) {
+        return function (req: any, res: any, next: any) {
             const startedAt = Date.now();
             res.on("finish", () => {
                 const route = req.originalUrl?.split('?')[0] ?? 'unknown';

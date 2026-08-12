@@ -3,17 +3,22 @@ import jwt from "jsonwebtoken";
 import { randomUUID } from "crypto";
 const uuidv4 = () => randomUUID();
 export default class Auth {
+
     context;
-    constructor(context) {
+
+    constructor(context: any) {
         this.context = context;
     }
-    encrypt(secret) {
+
+    encrypt(secret: any) {
         return bcrypt.hash(secret, parseInt(this.context.env.SALT));
     }
-    async compare(secret, password) {
+
+    async compare(secret: any, password: any) {
         return await bcrypt.compare(secret, password);
     }
-    signature(payload, secret, ttl) {
+
+    signature(payload: any, secret: any, ttl: any) {
         payload.jti = uuidv4();
         if (payload?.exp) {
             return jwt.sign(payload, secret);
@@ -25,25 +30,29 @@ export default class Auth {
             });
         }
     }
-    verify(signature, secret) {
+
+    verify(signature: any, secret: any) {
         return jwt.verify(signature, secret);
     }
-    valid(signature, secret) {
+
+    valid(signature: any, secret: any) {
         return jwt.verify(signature, secret, { ignoreExpiration: true });
     }
-    expired(exp) {
+
+    expired(exp: any) {
         const currentTimestamp = Math.floor(Date.now() / 1000);
         console.log(currentTimestamp, exp, exp - currentTimestamp);
         return currentTimestamp > exp;
     }
+
     refreshToken() {
         const secret = this.context.env.JWT_REFRESH_SECRET;
         const ttl = this.context.env.JWT_REFRESH_TTL;
         const object = this;
-        function sign(payload) {
+        function sign(payload: any) {
             return object.signature(payload, secret, ttl);
         }
-        function validate(signature) {
+        function validate(signature: any) {
             return object.valid(signature, secret);
         }
         return {
@@ -51,14 +60,15 @@ export default class Auth {
             validate,
         };
     }
+
     accessToken() {
         const secret = this.context.env.JWT_SECRET;
         const ttl = this.context.env.JWT_TTL;
         const object = this;
-        function sign(payload) {
+        function sign(payload: any) {
             return object.signature(payload, secret, ttl);
         }
-        function validate(signature) {
+        function validate(signature: any) {
             return object.valid(signature, secret);
         }
         return {
@@ -66,7 +76,8 @@ export default class Auth {
             validate,
         };
     }
-    dualToken(payload) {
+
+    dualToken(payload: any) {
         const refresh = this.refreshToken().sign(payload);
         const access = this.accessToken().sign(payload);
         return {

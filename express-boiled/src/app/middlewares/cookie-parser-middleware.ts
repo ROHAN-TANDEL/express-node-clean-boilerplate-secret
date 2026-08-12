@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser';
 export class CookieMiddleware {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     startMiddleware() {

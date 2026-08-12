@@ -1,8 +1,8 @@
 import { Pool } from "pg";
-import AppKernel from "../../../app/kernel/kernel.js";
+
 export class Database {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     connect() {
@@ -15,11 +15,11 @@ export class Database {
             database: this.context.env.PG_MASTER_DATABASE
         });
     }
-    async disconnect(pool) {
+    async disconnect(pool: any) {
         console.info({ infra_status: " DB connection stopped... " });
         await pool.end();
     }
-    async cleanUp(pool) {
+    async cleanUp(pool: any) {
         console.info({ infra_status: " DB connection cleanup... " });
         await this.disconnect(pool);
     }

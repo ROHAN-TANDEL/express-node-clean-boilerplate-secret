@@ -1,10 +1,10 @@
 export class ReadinessCheckScript {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     run() {
-        return async (_req, res) => {
+        return async (_req: any, res: any) => {
             try {
                 await this.context.pool?.query('SELECT 1');
                 if (!this.context.redisClient)

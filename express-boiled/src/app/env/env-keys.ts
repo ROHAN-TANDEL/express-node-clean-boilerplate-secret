@@ -1,5 +1,5 @@
 export class EnvKeys {
-    keyBind(env) {
+    keyBind(env :any) {
         return {
             APP_PORT: Number(env.APP_PORT ?? 3000),
             LOG: { level: env.NODE_ENV === "development" ? "debug" : "info" },

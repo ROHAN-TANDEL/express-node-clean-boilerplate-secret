@@ -1,11 +1,11 @@
 export default class RouteNotFoundCheckMiddleware {
     context;
-    constructor(context) {
+    constructor(context: any) {
         this.context = context;
     }
     startMiddleware() {
         console.info({ route_not_found: "registering route not found middleware... " });
-        return (req, res) => res.status(404).json({
+        return (req: any, res: any) => res.status(404).json({
             status: 'failed',
             message: `Route not found: ${req.method} ${req.originalUrl}`
         });
