@@ -1,8 +1,11 @@
 export default class ProductController {
+
     context;
+
     constructor(context) {
         this.context = context;
     }
+
     getProducts = async (req, res) => {
         try {
             const query = `SELECT * FROM master.products WHERE deleted_at IS NULL ORDER BY id ASC  OFFSET $1 LIMIT $2`;
@@ -25,7 +28,8 @@ export default class ProductController {
                 message: error.message
             });
         }
-    };
+    }
+
     getProduct = async (req, res) => {
         try {
             const id = req.params.id;
@@ -57,9 +61,11 @@ export default class ProductController {
                 message: error.message
             });
         }
-    };
-    createProduct = async (context) => {
-    };
+    }
+
+    createProduct = async () => {
+    }
+
     deleteProduct = async (req, res) => {
         try {
             const id = req.params.id;
@@ -81,7 +87,8 @@ export default class ProductController {
                 message: error.message
             });
         }
-    };
+    }
+
     updateProduct = async (req, res) => {
         try {
             const id = req.params.id;
@@ -125,6 +132,6 @@ export default class ProductController {
                 message: error.message
             });
         }
-    };
+    }
 }
 //# sourceMappingURL=ProductController.js.map

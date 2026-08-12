@@ -21,7 +21,7 @@ export class StopServer {
     /**
      * Initializes the signal listeners
      */
-    init() {
+    init(){
         this.context.logger.info({ server_stop_status: "registering graceful shutdown... " });
         console.info({ server_stop_status: "registering graceful shutdown... " });
         const context = this.context;
@@ -52,9 +52,11 @@ export class StopServer {
         };
         return { stopper };
     }
+
     /**
      * Executes the actual shutdown sequence
      */
+
     shutdown(server: any) {
         // Force exit safety timeout (e.g., 10 seconds)
         const forceExit = setTimeout(() => {

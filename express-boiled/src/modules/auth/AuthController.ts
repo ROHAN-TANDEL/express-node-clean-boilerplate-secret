@@ -1,14 +1,18 @@
 export default class AuthController {
+
     context;
+
     constructor(context: any) {
         this.context = context;
     }
+
     async ping(_req: any, res: any) {
         return res.status(200).send({
             status: "OK",
             data: "PONG"
         });
     }
+
     async getRoles() {
         try {
             const query = 'SELECT * FROM master.roles';
@@ -20,6 +24,7 @@ export default class AuthController {
             return [];
         }
     }
+
     async insertUser(user: any) {
         try {
             const query = `INSERT INTO master.users (first_name,
@@ -51,6 +56,7 @@ export default class AuthController {
             throw error;
         }
     }
+
     register = async (req: any, res: any) => {
         try {
             const user = req.body;
@@ -110,7 +116,8 @@ export default class AuthController {
                 message: error.message
             });
         }
-    };
+    }
+
     logout = async (req: any, res: any) => {
         try {
             const { jti, exp } = req.user;
@@ -150,6 +157,7 @@ export default class AuthController {
             };
         }
     }
+
     refreshToken = async (req: any, res: any) => {
         try {
             const token = req.body;
@@ -216,7 +224,8 @@ export default class AuthController {
                 message: "incorrect token"
             });
         }
-    };
+    }
+
     async store(refreshToken: any, userId: any, exp?: any) {
         const client = await this.context.client.connect();
         try {
@@ -259,6 +268,7 @@ export default class AuthController {
             client.release();
         }
     }
+
     login = async (req: any, res: any) => {
         try {
             const login = req.body;
@@ -305,6 +315,6 @@ export default class AuthController {
                 message: "login failed"
             });
         }
-    };
+    }
 }
 //# sourceMappingURL=AuthController.js.map

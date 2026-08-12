@@ -9,7 +9,7 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "strict": true,
+    "strict": false,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,

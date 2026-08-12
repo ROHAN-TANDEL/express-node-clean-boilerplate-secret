@@ -1,8 +1,11 @@
 export default class UserController {
+
     context;
+
     constructor(context) {
         this.context = context;
     }
+
     getUser = async (req, res) => {
         const user = await this.userExistsById(req.params.id);
         if (!user || user.status === 'failed' || user?.length === 0) {
@@ -18,6 +21,7 @@ export default class UserController {
             data: result
         });
     };
+
     getUsers = async (req, res) => {
         try {
             const filter = req.query;
@@ -73,6 +77,7 @@ export default class UserController {
             });
         }
     };
+
     deleteUser = async (req, res) => {
         try {
             const userId = req.params.id;
@@ -95,6 +100,7 @@ export default class UserController {
             });
         }
     };
+
     updateUser = async (req, res) => {
         try {
             const user = req.body;
@@ -143,6 +149,7 @@ export default class UserController {
             });
         }
     };
+
     async getRole(role) {
         try {
             const roles = await this.getRoles();
@@ -174,6 +181,7 @@ export default class UserController {
             };
         }
     }
+
     async getRoles() {
         try {
             const query = 'SELECT * FROM master.roles';
@@ -185,6 +193,7 @@ export default class UserController {
             return [];
         }
     }
+
     async userExistsById(id) {
         try {
             const query = `SELECT * FROM master.users WHERE id=$1 AND status='ACTIVE' AND deleted_at IS NULL `;
